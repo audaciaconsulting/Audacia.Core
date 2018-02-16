@@ -16,8 +16,8 @@ namespace Audacia.Core
 
         private class DefaultDateTimeProvider : IDateTimeOffsetProvider
         {
-            public DateTimeOffset Now => DateTime.Now;
-            public DateTimeOffset Today => DateTime.Today;
+            public DateTimeOffset Now => DateTimeOffset.Now;
+            public DateTime Today => DateTime.Today;
         }
     }
 }
