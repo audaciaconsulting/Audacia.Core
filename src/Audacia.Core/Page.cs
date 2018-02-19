@@ -85,7 +85,7 @@ namespace Audacia.Core
 
             var orderByExpression = GetOrderByExpression(propertyInfo);
 
-            var orderMethod = descending ? nameof(Queryable.OrderBy) : nameof(Queryable.OrderByDescending);
+            var orderMethod = descending ? nameof(Queryable.OrderByDescending) : nameof(Queryable.OrderBy);
 
             var method =
                 typeof(Queryable).GetMethods().First(m => m.Name == orderMethod && m.GetParameters().Length == 2);
