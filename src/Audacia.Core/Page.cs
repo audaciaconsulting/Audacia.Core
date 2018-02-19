@@ -76,6 +76,13 @@ namespace Audacia.Core
 
             //Upper case first to account from lower case JSON
             var propertyInfo = Type.GetProperty(sortProperty.UpperCaseFirst());
+
+            if (propertyInfo == null)
+            {
+                // Someone has provided a sort property that doesn't exist on the result
+                throw new ArgumentException("Invalid Sort Property", nameof(sortProperty));
+            }
+
             var orderByExpression = GetOrderByExpression(propertyInfo);
 
             var orderMethod = descending ? nameof(Queryable.OrderBy) : nameof(Queryable.OrderByDescending);
