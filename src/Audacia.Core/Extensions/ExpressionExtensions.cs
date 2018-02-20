@@ -9,7 +9,7 @@ namespace Audacia.Core.Extensions
 {
     public static class ExpressionExtensions
     {
-        public static PropertyInfo GetPropertyInfo<T, TProperty>(Expression<Func<T, TProperty>> propertyExpression)
+        public static PropertyInfo GetPropertyInfo(Expression propertyExpression)
         {
             if (propertyExpression.NodeType != ExpressionType.Lambda)
             {
