@@ -41,6 +41,7 @@ namespace Audacia.Core.Extensions
 
         private static MemberExpression ExtractMemberExpression(Expression expression)
         {
+            // ReSharper disable once SwitchStatementMissingSomeCases
             switch (expression.NodeType)
             {
                 case ExpressionType.MemberAccess:
