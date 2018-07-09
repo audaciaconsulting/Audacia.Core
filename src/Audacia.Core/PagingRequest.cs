@@ -1,6 +1,6 @@
 ﻿namespace Audacia.Core
 {
-    public class PagingRequest
+    public class PagingRequest : IPagingRequest
     {
         public PagingRequest()
             : this(int.MaxValue, 0)

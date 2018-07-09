@@ -9,67 +9,66 @@ namespace Audacia.Core
 {
     public class Page<T> : IPage<T>
     {
-        public int TotalPages { get; private set; }
-        public int TotalRecords { get; private set; }
+        public int TotalPages { get; }
+        public int TotalRecords { get; }
         public IEnumerable<T> Data { get; }
 
-        private Type Type { get; } = typeof(T);
-
-        public Page(IQueryable<T> query, SortablePagingRequest sortablePagingRequest)
+        public Page(int totalPages, int totalRecords, IEnumerable<T> data)
         {
-            var (pageNumber, pageSize) = PageBase(query, sortablePagingRequest);
+            TotalPages = totalPages;
+            TotalRecords = totalRecords;
+            Data = data;
+        }
+
+        public Page(IQueryable<T> query, ISortablePagingRequest sortablePagingRequest)
+        {
+            TotalRecords = query.Count();
+
+            var pagingInfo = PageBase(sortablePagingRequest, TotalRecords);
+
+            TotalPages = pagingInfo.TotalPages;
 
             var sortProperty = sortablePagingRequest.SortProperty;
             var descending = sortablePagingRequest.Descending;
 
             query = OrderBySortPropertyAndDirection(query, sortProperty, descending);
 
-            Data =
-                query.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+            Data = query.Skip(pagingInfo.PageNumber * pagingInfo.PageSize).Take(pagingInfo.PageSize).ToList();
         }
 
-        public Page(IEnumerable<T> enumerable, SortablePagingRequest sortablePagingRequest)
+        public Page(IEnumerable<T> enumerable, ISortablePagingRequest sortablePagingRequest)
             : this(enumerable.AsQueryable(), sortablePagingRequest)
         {
         }
-
-        public Page(IQueryable<T> query, PagingRequest pagingRequest)
-        {
-            var (pageNumber, pageSize) = PageBase(query, pagingRequest);
-
-            Data =
-                query.Skip(pageNumber * pageSize).Take(pageSize).ToList();
-        }
-
-        public Page(IEnumerable<T> enumerable, PagingRequest pagingRequest)
-            : this(enumerable.AsQueryable(), pagingRequest)
-        {
-        }
         
-        private (int, int) PageBase(IQueryable<T> query, PagingRequest pagingRequest)
+        public static PagingInfo PageBase(IPagingRequest pagingRequest, int totalRecords)
         {
-            TotalRecords = query.Count();
-
             //If no page size specified, show all
             var pageSize = pagingRequest.PageSize ?? int.MaxValue;
 
-            TotalPages = Math.Max((int)Math.Ceiling(TotalRecords / (double)pageSize), 1);
+            var totalPages = Math.Max((int)Math.Ceiling(totalRecords / (double)pageSize), 1);
 
-            var pageNumber = pagingRequest.PageNumber > TotalPages ? 1 : pagingRequest.PageNumber;
+            var pageNumber = pagingRequest.PageNumber > totalPages ? 1 : pagingRequest.PageNumber;
 
-            return (pageNumber, pageSize);
+            return new PagingInfo
+            {
+                PageSize = pageSize,
+                TotalPages = totalPages,
+                PageNumber = pageNumber
+            };
         }
-
-        public static IQueryable<T> OrderBySortPropertyAndDirection(IQueryable<T> query, string sortProperty,
+        
+        public static IOrderedQueryable<T> OrderBySortPropertyAndDirection(IQueryable<T> query, string sortProperty,
             bool descending)
         {
             if (string.IsNullOrWhiteSpace(sortProperty))
             {
-                return query;
+                throw new ArgumentException("No Sort Property provided", nameof(sortProperty));
             }
 
+            var queryType = typeof(T);
             //Upper case first to account from lower case JSON
-            var propertyInfo = Type.GetProperty(sortProperty.UpperCaseFirst());
+            var propertyInfo = queryType.GetProperty(sortProperty.UpperCaseFirst());
 
             if (propertyInfo == null)
             {
@@ -77,21 +76,21 @@ namespace Audacia.Core
                 throw new ArgumentException("Invalid Sort Property", nameof(sortProperty));
             }
 
-            var orderByExpression = GetOrderByExpression(propertyInfo);
+            var orderByExpression = GetOrderByExpression(propertyInfo, queryType);
 
             var orderMethod = descending ? nameof(Queryable.OrderByDescending) : nameof(Queryable.OrderBy);
 
             var method =
                 typeof(Queryable).GetMethods().First(m => m.Name == orderMethod && m.GetParameters().Length == 2);
 
-            var genericMethod = method.MakeGenericMethod(Type, propertyInfo.PropertyType);
+            var genericMethod = method.MakeGenericMethod(queryType, propertyInfo.PropertyType);
 
-            return genericMethod.Invoke(null, new object[] { query, orderByExpression }) as IQueryable<T>;
+            return genericMethod.Invoke(null, new object[] { query, orderByExpression }) as IOrderedQueryable<T>;
         }
 
-        private static LambdaExpression GetOrderByExpression(MemberInfo propertyInfo)
+        private static LambdaExpression GetOrderByExpression(MemberInfo propertyInfo, Type queryType)
         {
-            var parameterExpression = Expression.Parameter(Type);
+            var parameterExpression = Expression.Parameter(queryType);
             var propertyExpression = Expression.PropertyOrField(parameterExpression, propertyInfo.Name);
 
             return Expression.Lambda(propertyExpression, parameterExpression);
