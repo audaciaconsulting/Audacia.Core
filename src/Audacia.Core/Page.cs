@@ -11,6 +11,7 @@ namespace Audacia.Core
     {
         public int TotalPages { get; private set; }
         public int TotalRecords { get; private set; }
+        public IEnumerable<T> Data { get; }
 
         private Type Type { get; } = typeof(T);
 
@@ -49,7 +50,7 @@ namespace Audacia.Core
         {
             TotalRecords = query.Count();
 
-            //If no page size specificed, show all
+            //If no page size specified, show all
             var pageSize = pagingRequest.PageSize ?? int.MaxValue;
 
             TotalPages = Math.Max((int)Math.Ceiling(TotalRecords / (double)pageSize), 1);
@@ -59,15 +60,8 @@ namespace Audacia.Core
             return (pageNumber, pageSize);
         }
 
-        private LambdaExpression GetOrderByExpression(MemberInfo propertyInfo)
-        {
-            var parameterExpression = Expression.Parameter(Type);
-            var propertyExpression = Expression.PropertyOrField(parameterExpression, propertyInfo.Name);
-
-            return Expression.Lambda(propertyExpression, parameterExpression);
-        }
-
-        private IQueryable<T> OrderBySortPropertyAndDirection(IQueryable<T> query, string sortProperty, bool descending)
+        public static IQueryable<T> OrderBySortPropertyAndDirection(IQueryable<T> query, string sortProperty,
+            bool descending)
         {
             if (string.IsNullOrWhiteSpace(sortProperty))
             {
@@ -95,6 +89,12 @@ namespace Audacia.Core
             return genericMethod.Invoke(null, new object[] { query, orderByExpression }) as IQueryable<T>;
         }
 
-        public IEnumerable<T> Data { get; }
+        private static LambdaExpression GetOrderByExpression(MemberInfo propertyInfo)
+        {
+            var parameterExpression = Expression.Parameter(Type);
+            var propertyExpression = Expression.PropertyOrField(parameterExpression, propertyInfo.Name);
+
+            return Expression.Lambda(propertyExpression, parameterExpression);
+        }
     }
 }
