@@ -8,6 +8,10 @@ namespace Audacia.Core
     public interface IDateTimeOffsetProvider
     {
         /// <summary>
+        /// Mockable DateTimeOffset.UtcNow replacement
+        /// </summary>
+        DateTimeOffset UtcNow { get; }
+        /// <summary>
         /// Mockable DateTimeOffset.Now replacement
         /// </summary>
         DateTimeOffset Now { get; }
