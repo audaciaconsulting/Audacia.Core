@@ -11,23 +11,28 @@ namespace Audacia.Core
     {
         public int TotalPages { get; private set; }
         public int TotalRecords { get; private set; }
-
-        private Type Type { get; } = typeof(T);
-
+        
         public Page(IQueryable<T> query, SortablePagingRequest sortablePagingRequest)
         {
             var (pageNumber, pageSize) = PageBase(query, sortablePagingRequest);
 
-            var sortProperty = sortablePagingRequest.SortProperty;
             var descending = sortablePagingRequest.Descending;
 
-            query = OrderBySortPropertyAndDirection(query, sortProperty, descending);
+            //Support the propertyname being set and the expression not, by converting the property name to lambda
+            var sortExpressions = sortablePagingRequest is SortablePagingRequest<T> sortableExpressionPagingRequest
+                ? sortableExpressionPagingRequest.SortExpressions
+                : new List<Expression<Func<T, object>>>
+                {
+                    sortablePagingRequest.SortProperty.ToLambdaExpression<T>()
+                };
+            query = SortQuery(query, sortExpressions, descending);
 
-            Data =
-                query.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+
+            Data = query.Skip(pageNumber * pageSize).Take(pageSize).ToList();
         }
 
-        public Page(IEnumerable<T> enumerable, SortablePagingRequest sortablePagingRequest)
+        public Page(IEnumerable<T> enumerable, SortablePagingRequest
+            sortablePagingRequest)
             : this(enumerable.AsQueryable(), sortablePagingRequest)
         {
         }
@@ -44,7 +49,7 @@ namespace Audacia.Core
             : this(enumerable.AsQueryable(), pagingRequest)
         {
         }
-        
+
         private (int, int) PageBase(IQueryable<T> query, PagingRequest pagingRequest)
         {
             TotalRecords = query.Count();
@@ -59,40 +64,19 @@ namespace Audacia.Core
             return (pageNumber, pageSize);
         }
 
-        private LambdaExpression GetOrderByExpression(MemberInfo propertyInfo)
+        private IQueryable<T> SortQuery(IQueryable<T> query, List<Expression<Func<T, object>>> sortProperties, bool descending)
         {
-            var parameterExpression = Expression.Parameter(Type);
-            var propertyExpression = Expression.PropertyOrField(parameterExpression, propertyInfo.Name);
-
-            return Expression.Lambda(propertyExpression, parameterExpression);
-        }
-
-        private IQueryable<T> OrderBySortPropertyAndDirection(IQueryable<T> query, string sortProperty, bool descending)
-        {
-            if (string.IsNullOrWhiteSpace(sortProperty))
+            if (sortProperties == null)
             {
                 return query;
             }
 
-            //Upper case first to account from lower case JSON
-            var propertyInfo = Type.GetProperty(sortProperty.UpperCaseFirst());
-
-            if (propertyInfo == null)
+            foreach (var sortProperty in sortProperties)
             {
-                // Someone has provided a sort property that doesn't exist on the result
-                throw new ArgumentException("Invalid Sort Property", nameof(sortProperty));
+                query = query.AppendOrderBy(sortProperty, descending);
             }
 
-            var orderByExpression = GetOrderByExpression(propertyInfo);
-
-            var orderMethod = descending ? nameof(Queryable.OrderByDescending) : nameof(Queryable.OrderBy);
-
-            var method =
-                typeof(Queryable).GetMethods().First(m => m.Name == orderMethod && m.GetParameters().Length == 2);
-
-            var genericMethod = method.MakeGenericMethod(Type, propertyInfo.PropertyType);
-
-            return genericMethod.Invoke(null, new object[] { query, orderByExpression }) as IQueryable<T>;
+            return query;
         }
 
         public IEnumerable<T> Data { get; }
