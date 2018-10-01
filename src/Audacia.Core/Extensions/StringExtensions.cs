@@ -219,13 +219,13 @@ namespace Audacia.Core.Extensions
         }
 
         /// <summary>
-        /// Given the name of a property return an expression representing `t => t.{propertName}`
+        /// Given the name of a property return an expression representing `t => t.{propertyName}`
         /// </summary>
         /// <typeparam name="T">The type that the property must live on</typeparam>
         /// <param name="propertyName"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException">If the property doesn't exist on T</exception>
-        public static Expression<Func<T, object>> ToLambdaExpression<T>(this string propertyName)
+        public static Expression<Func<T, object>> ToPredicate<T>(this string propertyName)
         {
             //Upper case first to account from lower case JSON
             var type = typeof(T);

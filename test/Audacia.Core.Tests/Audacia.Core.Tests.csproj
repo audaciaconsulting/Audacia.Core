@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Audacia.Core\Audacia.Core.csproj" />
+    <ProjectReference Include="..\..\src\Audacia.Core\Audacia.Core.csproj" />
   </ItemGroup>
 
 </Project>

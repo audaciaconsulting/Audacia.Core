@@ -26,7 +26,7 @@ namespace Audacia.Core
 
         public void SetSortExpression(string propertyName)
         {
-            var expression = propertyName.ToLambdaExpression<T>();
+            var expression = propertyName.ToPredicate<T>();
             this.SortExpressions.Add(expression);
         }
     }

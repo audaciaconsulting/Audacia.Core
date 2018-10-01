@@ -23,7 +23,7 @@ namespace Audacia.Core
                 ? sortableExpressionPagingRequest.SortExpressions
                 : new List<Expression<Func<T, object>>>
                 {
-                    sortablePagingRequest.SortProperty.ToLambdaExpression<T>()
+                    sortablePagingRequest.SortProperty.ToPredicate<T>()
                 };
             query = SortQuery(query, sortExpressions, descending);
 
