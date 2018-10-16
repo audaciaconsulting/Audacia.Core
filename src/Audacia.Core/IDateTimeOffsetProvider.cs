@@ -18,6 +18,10 @@ namespace Audacia.Core
         /// <summary>
         /// Mockable DateTime.Today replacement
         /// </summary>
-        DateTime Today { get; }
+        DateTimeOffset Today { get; }
+        /// <summary>
+        /// Mockable DateTime.Today replacement, but being the date from UtcNow
+        /// </summary>
+        DateTimeOffset UtcToday { get; }
     }
 }
