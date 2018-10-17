@@ -18,7 +18,8 @@ namespace Audacia.Core
         {
             public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
             public DateTimeOffset Now => DateTimeOffset.Now;
-            public DateTime Today => DateTime.Today;
+            public DateTimeOffset Today => DateTime.Today;
+            public DateTimeOffset UtcToday => new DateTimeOffset(DateTimeOffset.UtcNow.Date, new TimeSpan());
         }
     }
 }
