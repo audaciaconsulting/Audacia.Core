@@ -44,6 +44,13 @@ namespace Audacia.Core
             : this(enumerable.AsQueryable(), pagingRequest)
         {
         }
+
+        public Page(IEnumerable<T> enumerable, int totalPages, int totalRecords)
+        {
+            Data = enumerable;
+            TotalPages = totalPages;
+            TotalRecords = totalRecords;
+        }
         
         private (int, int) PageBase(IQueryable<T> query, PagingRequest pagingRequest)
         {
