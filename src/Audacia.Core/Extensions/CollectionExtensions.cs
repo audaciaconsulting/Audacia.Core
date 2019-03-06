@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Audacia.Core.Extensions
 {
@@ -11,22 +12,46 @@ namespace Audacia.Core.Extensions
                 collection.Add(item);
             }
         }
-        
+
         /// <summary>
-        /// Adds the elements of the specified collection to the end of the List.
+        /// Adds the elements of the specified enumerable to the end of the collection.
         /// </summary>
-        public static void AddRange<T>(this ICollection<T> source, IEnumerable<T> range)
+        public static void AddRange<T>(this ICollection<T> destination, IEnumerable<T> source)
         {
-            if (source is List<T> list)
+            // Prevent add range on arrays
+            if (destination.IsReadOnly)
             {
-                list.AddRange(range);
+                throw new InvalidOperationException("Collection is read-only."); 
             }
-            else
+            
+            if (destination is List<T> list)
             {
-                foreach (var item in range)
-                {
-                    source.Add(item);
-                }
+                list.AddRange(source);
+            }
+            else foreach (var item in source)
+            {
+                destination.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// Removes the elements of the specified enumerable from the collection.
+        /// </summary>
+        public static void RemoveARange<T>(this ICollection<T> destination, IEnumerable<T> source)
+        {
+            // Prevent remove range on arrays
+            if (destination.IsReadOnly)
+            {
+                throw new InvalidOperationException("Collection is read-only."); 
+            }
+            
+            if (ReferenceEquals(destination, source))
+            {
+                destination.Clear();
+            }
+            else foreach (var item in source)
+            {
+                destination.Remove(item);
             }
         }
     }
