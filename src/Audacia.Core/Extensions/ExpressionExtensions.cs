@@ -106,13 +106,35 @@ namespace Audacia.Core.Extensions
             var negated = Expression.Not(expression.Body);
             return Expression.Lambda<Func<T, bool>>(negated, expression.Parameters);
         }
+        
+        /// <summary>
+        /// Apply the <see cref="second"/> expression to the result of this expression.
+        /// </summary>
+        /// <typeparam name="TIn"></typeparam>
+        /// <typeparam name="TInter"></typeparam>
+        /// <typeparam name="TOut"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second">The second expression to apply to the result of the first</param>
+        /// <returns></returns>
+        public static Expression<Func<TIn, TOut>> Then<TIn, TInter, TOut>(this Expression<Func<TIn, TInter>> first, Expression<Func<TInter, TOut>> second)
+        {
+            //Map the parameters of the second expression to the body of the first
+            var replacements = second.Parameters
+                .Select(p => new { parameter = p, replacement = first.Body })
+                .ToDictionary(p => (Expression)p.parameter, p => p.replacement);
+            
+            //Replace the parameters of the second Expression with the body of the first
+            //var secondBody = new ParameterReplacer(replacements).Visit(second.Body);
+            var secondBody = ParameterRebinder.ReplaceParameters(replacements, second.Body);
+            return Expression.Lambda<Func<TIn, TOut>>(secondBody, first.Parameters);
+        }
 
         public static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second,
             Func<Expression, Expression, Expression> merge)
         {
             // zip parameters (map from parameters of second to parameters of first)
             var map = first.Parameters
-                .Select((f, i) => new { f, s = second.Parameters[i] })
+                .Select((f, i) => new { f = (Expression)f, s = (Expression)second.Parameters[i] })
                 .ToDictionary(p => p.s, p => p.f);
 
             // replace parameters in the second lambda expression with the parameters in the first
@@ -124,14 +146,14 @@ namespace Audacia.Core.Extensions
 
         private class ParameterRebinder : ExpressionVisitor
         {
-            private readonly IDictionary<ParameterExpression, ParameterExpression> _map;
+            private readonly IDictionary<Expression, Expression> _map;
 
-            private ParameterRebinder(Dictionary<ParameterExpression, ParameterExpression> map)
+            private ParameterRebinder(Dictionary<Expression, Expression> map)
             {
-                _map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
+                _map = map ?? new Dictionary<Expression, Expression>();
             }
 
-            public static Expression ReplaceParameters(Dictionary<ParameterExpression, ParameterExpression> map,
+            public static Expression ReplaceParameters(Dictionary<Expression, Expression> map,
                 Expression exp)
             {
                 return new ParameterRebinder(map).Visit(exp);
@@ -139,12 +161,9 @@ namespace Audacia.Core.Extensions
 
             protected override Expression VisitParameter(ParameterExpression p)
             {
-                if (_map.TryGetValue(p, out var replacement))
-                {
-                    p = replacement;
-                }
-
-                return base.VisitParameter(p);
+                return _map.TryGetValue(p, out var replacement)
+                    ? replacement
+                    : base.VisitParameter(p);
             }
         }
         
