@@ -124,7 +124,6 @@ namespace Audacia.Core.Extensions
                 .ToDictionary(p => (Expression)p.parameter, p => p.replacement);
             
             //Replace the parameters of the second Expression with the body of the first
-            //var secondBody = new ParameterReplacer(replacements).Visit(second.Body);
             var secondBody = ParameterRebinder.ReplaceParameters(replacements, second.Body);
             return Expression.Lambda<Func<TIn, TOut>>(secondBody, first.Parameters);
         }
