@@ -11,7 +11,6 @@ namespace Audacia.Core
     /// <summary>
     /// Provides a set of functions for converting enums to display name strings and back again.
     /// Supported attributes are;
-    /// <see cref="DisplayNameAttribute"/>,
     /// <see cref="DescriptionAttribute"/>,
     /// <see cref="EnumMemberAttribute"/>.
     /// </summary>
@@ -43,31 +42,6 @@ namespace Audacia.Core
         }
 
         /// <summary>
-        /// Retrieves the display name for all fields on the provided enum type.
-        /// For fields without a <see cref="DisplayNameAttribute"/>, <see langword="null"/> will be returned.
-        /// </summary>
-        /// <param name="enumType">Enum type</param>
-        public static IEnumerable<string> DisplayNames(Type enumType)
-        {
-            ValidateEnumType(enumType);
-
-            foreach (var value in Enum.GetValues(enumType))
-            {
-                yield return GetDisplayName(value);
-            }
-        }
-
-        /// <summary>
-        /// Retrieves the display name for all fields on the provided enum type.
-        /// For fields without a <see cref="DisplayNameAttribute"/>, <see langword="null"/> will be returned.
-        /// </summary>
-        /// <typeparam name="TEnum">Enum type</typeparam>
-        public static IEnumerable<string> DisplayNames<TEnum>() where TEnum : struct
-        {
-            return DisplayNames(typeof(TEnum));
-        }
-
-        /// <summary>
         /// Retrieves the enum member value for all fields on the provided enum type.
         /// For fields without a <see cref="EnumMemberAttribute"/>, <see langword="null"/> will be returned.
         /// </summary>
@@ -81,7 +55,6 @@ namespace Audacia.Core
                 yield return GetEnumMemberValue(value);
             }
         }
-
 
         /// <summary>
         /// Retrieves the enum member value for all fields on the provided enum type.
@@ -159,25 +132,6 @@ namespace Audacia.Core
         }
 
         /// <summary>
-        /// Returns the value set on the <see cref="DisplayNameAttribute"/>.
-        /// For fields without a <see cref="DisplayNameAttribute"/>, <see langword="null"/> will be returned.
-        /// </summary>
-        /// <param name="enumValue">Enum value</param>
-        /// <returns>The display name string</returns>
-        public static string GetDisplayName(object enumValue)
-        {
-            ValidateValueObject(enumValue);
-
-            var enumType = TypeExtensions.GetUnderlyingTypeIfNullable(enumValue.GetType());
-
-            ValidateEnumType(enumType);
-
-            return GetFieldInfo(enumValue)
-                ?.GetCustomAttribute<DisplayNameAttribute>(false)
-                ?.DisplayName;
-        }
-
-        /// <summary>
         /// Returns the value set on the <see cref="EnumMemberAttribute"/>.
         /// For fields without a <see cref="EnumMemberAttribute"/>, <see langword="null"/> will be returned.
         /// </summary>
@@ -218,11 +172,26 @@ namespace Audacia.Core
         /// <param name="enumValue">Enum value</param>
         public static string GetOption(object enumValue)
         {
-            return GetDisplayName(enumValue) ??
-                   GetDescription(enumValue) ??
+            return GetDescription(enumValue) ??
                    GetEnumMemberValue(enumValue) ??
                    GetName(enumValue) ??
                    enumValue?.ToString();
+        }
+
+        /// <summary>
+        /// Returns the enum value as a text integer.
+        /// </summary>
+        /// <param name="enumValue">Enum value</param>
+        /// <returns>The field name</returns>
+        public static string GetValue(object enumValue)
+        {
+            ValidateValueObject(enumValue);
+
+            var enumType = TypeExtensions.GetUnderlyingTypeIfNullable(enumValue.GetType());
+
+            ValidateEnumType(enumType);
+
+            return Convert.ToInt32(enumValue).ToString();
         }
 
         /// <summary>
@@ -278,7 +247,6 @@ namespace Audacia.Core
             foreach (var field in fields)
             {
                 if (MatchesEnumMember(field, value) ||
-                    MatchesDisplayName(field, value) ||
                     MatchesDescription(field, value) ||
                     MatchesName(field, value))
                 {
@@ -385,18 +353,6 @@ namespace Audacia.Core
             if (attribute != null)
             {
                 return string.Equals(attribute.Description, value, StringComparison.OrdinalIgnoreCase);
-            }
-
-            return false;
-        }
-
-        private static bool MatchesDisplayName(MemberInfo member, string value)
-        {
-            var attribute = member.GetCustomAttribute<DisplayNameAttribute>(false);
-
-            if (attribute != null)
-            {
-                return string.Equals(attribute.DisplayName, value, StringComparison.OrdinalIgnoreCase);
             }
 
             return false;
