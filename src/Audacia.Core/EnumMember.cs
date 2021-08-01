@@ -18,35 +18,130 @@ namespace Audacia.Core
     public static class EnumMember
     {
         /// <summary>
-        /// Converts an enumerable of <see cref="{TEnum}"/> into an enumerable of display names.
+        /// Retrieves the description for all fields on the provided enum type.
+        /// For fields without a <see cref="DescriptionAttribute"/>, <see langword="null"/> will be returned.
         /// </summary>
-        /// <typeparam name="TEnum">Enum type</typeparam>
-        /// <param name="value">An enumerable of enum values</param>
-        /// <returns>An enumerable of display names</returns>
-        public static IEnumerable<string> AsEnumDisplayNames<TEnum>(this IEnumerable<TEnum> value) where TEnum : struct
+        /// <param name="enumType">Enum type</param>
+        public static IEnumerable<string> Descriptions(Type enumType)
         {
-            ValidateValueObject(value);
+            ValidateEnumType(enumType);
 
-            return value.Select(ToEnumDisplayName);
+            foreach (var value in Enum.GetValues(enumType))
+            {
+                yield return GetDescription(value);
+            }
         }
 
         /// <summary>
-        /// Converts a <see cref="{TEnum}"/> into a display name.
+        /// Retrieves the description for all fields on the provided enum type.
+        /// For fields without a <see cref="DescriptionAttribute"/>, <see langword="null"/> will be returned.
         /// </summary>
         /// <typeparam name="TEnum">Enum type</typeparam>
-        /// <param name="enumValue">Enum value</param>
-        /// <returns>A human readable display name</returns>
-        public static string ToEnumDisplayName<TEnum>(this TEnum enumValue) where TEnum : struct
+        public static IEnumerable<string> Descriptions<TEnum>() where TEnum : struct
         {
-            return GetDisplayName(enumValue) ??
-                   GetDescription(enumValue) ??
-                   GetEnumMemberValue(enumValue) ??
-                   GetName(enumValue) ??
-                   enumValue.ToString();
+            return Descriptions(typeof(TEnum));
+        }
+
+        /// <summary>
+        /// Retrieves the display name for all fields on the provided enum type.
+        /// For fields without a <see cref="DisplayNameAttribute"/>, <see langword="null"/> will be returned.
+        /// </summary>
+        /// <param name="enumType">Enum type</param>
+        public static IEnumerable<string> DisplayNames(Type enumType)
+        {
+            ValidateEnumType(enumType);
+
+            foreach (var value in Enum.GetValues(enumType))
+            {
+                yield return GetDisplayName(value);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the display name for all fields on the provided enum type.
+        /// For fields without a <see cref="DisplayNameAttribute"/>, <see langword="null"/> will be returned.
+        /// </summary>
+        /// <typeparam name="TEnum">Enum type</typeparam>
+        public static IEnumerable<string> DisplayNames<TEnum>() where TEnum : struct
+        {
+            return DisplayNames(typeof(TEnum));
+        }
+
+        /// <summary>
+        /// Retrieves the enum member value for all fields on the provided enum type.
+        /// For fields without a <see cref="EnumMemberAttribute"/>, <see langword="null"/> will be returned.
+        /// </summary>
+        /// <param name="enumType">Enum type</param>
+        public static IEnumerable<string> EnumMemberValues(Type enumType)
+        {
+            ValidateEnumType(enumType);
+
+            foreach (var value in Enum.GetValues(enumType))
+            {
+                yield return GetEnumMemberValue(value);
+            }
+        }
+
+
+        /// <summary>
+        /// Retrieves the enum member value for all fields on the provided enum type.
+        /// For fields without a <see cref="EnumMemberAttribute"/>, <see langword="null"/> will be returned.
+        /// </summary>
+        /// <typeparam name="TEnum">Enum type</typeparam>
+        public static IEnumerable<string> EnumMemberValues<TEnum>() where TEnum : struct
+        {
+            return EnumMemberValues(typeof(TEnum));
+        }
+
+        /// <summary>
+        /// Retrieves the field name for all fields on the provided enum type.
+        /// </summary>
+        /// <param name="enumType">Enum type</param>
+        public static IEnumerable<string> Names(Type enumType)
+        {
+            ValidateEnumType(enumType);
+
+            foreach (var value in Enum.GetValues(enumType))
+            {
+                yield return GetName(value);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the field name for all fields on the provided enum type.
+        /// </summary>
+        /// <typeparam name="TEnum">Enum type</typeparam>
+        public static IEnumerable<string> Names<TEnum>() where TEnum : struct
+        {
+            return Names(typeof(TEnum));
+        }
+
+        /// <summary>
+        /// Retrieves the first available human readable name for all fields in the provided enum type.
+        /// </summary>
+        /// <param name="enumType">Enum type</param>
+        public static IEnumerable<string> Options(Type enumType)
+        {
+            ValidateEnumType(enumType);
+
+            foreach (var value in Enum.GetValues(enumType))
+            {
+                yield return GetOption(value);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the first available human readable name for all fields in the provided enum type.
+        /// </summary>
+        /// <typeparam name="TEnum">Enum type</typeparam>
+        public static IEnumerable<string> Options<TEnum>() where TEnum : struct
+        {
+            return Options(typeof(TEnum));
         }
 
         /// <summary>
         /// Returns the value set on the <see cref="DescriptionAttribute"/>.
+        /// For fields without a <see cref="DescriptionAttribute"/>, <see langword="null"/> will be returned.
         /// </summary>
         /// <param name="enumValue">Enum value</param>
         /// <returns>The description string</returns>
@@ -54,9 +149,9 @@ namespace Audacia.Core
         {
             ValidateValueObject(enumValue);
 
-            var underlyingType = TypeExtensions.GetUnderlyingTypeIfNullable(enumValue.GetType());
+            var enumType = TypeExtensions.GetUnderlyingTypeIfNullable(enumValue.GetType());
 
-            ValidateEnumType(underlyingType);
+            ValidateEnumType(enumType);
 
             return GetFieldInfo(enumValue)
                 ?.GetCustomAttribute<DescriptionAttribute>(false)
@@ -65,6 +160,7 @@ namespace Audacia.Core
 
         /// <summary>
         /// Returns the value set on the <see cref="DisplayNameAttribute"/>.
+        /// For fields without a <see cref="DisplayNameAttribute"/>, <see langword="null"/> will be returned.
         /// </summary>
         /// <param name="enumValue">Enum value</param>
         /// <returns>The display name string</returns>
@@ -72,9 +168,9 @@ namespace Audacia.Core
         {
             ValidateValueObject(enumValue);
 
-            var underlyingType = TypeExtensions.GetUnderlyingTypeIfNullable(enumValue.GetType());
+            var enumType = TypeExtensions.GetUnderlyingTypeIfNullable(enumValue.GetType());
 
-            ValidateEnumType(underlyingType);
+            ValidateEnumType(enumType);
 
             return GetFieldInfo(enumValue)
                 ?.GetCustomAttribute<DisplayNameAttribute>(false)
@@ -83,6 +179,7 @@ namespace Audacia.Core
 
         /// <summary>
         /// Returns the value set on the <see cref="EnumMemberAttribute"/>.
+        /// For fields without a <see cref="EnumMemberAttribute"/>, <see langword="null"/> will be returned.
         /// </summary>
         /// <param name="enumValue">Enum value</param>
         /// <returns>The enummember value string</returns>
@@ -90,9 +187,9 @@ namespace Audacia.Core
         {
             ValidateValueObject(enumValue);
 
-            var underlyingType = TypeExtensions.GetUnderlyingTypeIfNullable(enumValue.GetType());
+            var enumType = TypeExtensions.GetUnderlyingTypeIfNullable(enumValue.GetType());
 
-            ValidateEnumType(underlyingType);
+            ValidateEnumType(enumType);
 
             return GetFieldInfo(enumValue)
                 ?.GetCustomAttribute<EnumMemberAttribute>(false)
@@ -108,11 +205,24 @@ namespace Audacia.Core
         {
             ValidateValueObject(enumValue);
 
-            var underlyingType = TypeExtensions.GetUnderlyingTypeIfNullable(enumValue.GetType());
+            var enumType = TypeExtensions.GetUnderlyingTypeIfNullable(enumValue.GetType());
 
-            ValidateEnumType(underlyingType);
+            ValidateEnumType(enumType);
 
             return GetFieldInfo(enumValue)?.Name;
+        }
+
+        /// <summary>
+        /// Returns the first available human readable name for the enum value.
+        /// </summary>
+        /// <param name="enumValue">Enum value</param>
+        public static string GetOption(object enumValue)
+        {
+            return GetDisplayName(enumValue) ??
+                   GetDescription(enumValue) ??
+                   GetEnumMemberValue(enumValue) ??
+                   GetName(enumValue) ??
+                   enumValue?.ToString();
         }
 
         /// <summary>
@@ -130,8 +240,7 @@ namespace Audacia.Core
         /// <returns>The enum value as an object</returns>
         public static object Parse(Type enumType, string value)
         {
-            var underlyingType = TypeExtensions.GetUnderlyingTypeIfNullable(enumType);
-            ValidateEnumType(underlyingType);
+            ValidateEnumType(enumType);
 
             value = SanitizeDisplayNameString(value);
             ValidateValueString(value);
@@ -142,8 +251,8 @@ namespace Audacia.Core
             try
             {
                 // Match by number value or field name
-                enumValue = Enum.Parse(underlyingType, value, ignoreCase: true);
-                enumDefined = Enum.IsDefined(underlyingType, enumValue);
+                enumValue = Enum.Parse(enumType, value, ignoreCase: true);
+                enumDefined = Enum.IsDefined(enumType, enumValue);
             }
             catch (ArgumentException)
             {
@@ -159,18 +268,19 @@ namespace Audacia.Core
             }
             else if (enumValue != null)
             {
-                throw new OverflowException($"Value '{value}' is outside the range of '${underlyingType.Name}'.");
+                throw new OverflowException($"Value '{value}' is outside the range of '${enumType.Name}'.");
             }
 
             // Get an enumerable of enum options
-            var fields = underlyingType.GetFields().Where(f => f.IsStatic);
+            var fields = enumType.GetFields().Where(f => f.IsStatic);
 
             // Attempt to match to each possible display value
             foreach (var field in fields)
             {
                 if (MatchesEnumMember(field, value) ||
                     MatchesDisplayName(field, value) ||
-                    MatchesDescription(field, value))
+                    MatchesDescription(field, value) ||
+                    MatchesName(field, value))
                 {
                     return field.GetValue(null);
                 }
@@ -239,11 +349,23 @@ namespace Audacia.Core
         }
 
         /// <summary>
-        /// Gets all values for the provided enum type. 
+        /// Retrieves the value for all fields on the provided enum type.
+        /// </summary>
+        /// <typeparam name="TEnum">Enum type</typeparam>
+        /// <returns>An integer array of enum values</returns>
+        public static IEnumerable<int> Values(Type enumType)
+        {
+            ValidateEnumType(enumType);
+
+            return (int[])Enum.GetValues(enumType);
+        }
+
+        /// <summary>
+        /// Retrieves the value for all fields on the provided enum type.
         /// </summary>
         /// <typeparam name="TEnum">Enum type</typeparam>
         /// <returns>An array of enum values</returns>
-        public static TEnum[] Values<TEnum>() where TEnum : struct
+        public static IEnumerable<TEnum> Values<TEnum>() where TEnum : struct
         {
             var enumType = typeof(TEnum);
             ValidateEnumType(enumType);
@@ -290,6 +412,11 @@ namespace Audacia.Core
             }
 
             return false;
+        }
+
+        private static bool MatchesName(MemberInfo member, string value)
+        {
+            return string.Equals(member.Name, value, StringComparison.OrdinalIgnoreCase);
         }
 
         private static string SanitizeDisplayNameString(string value)
