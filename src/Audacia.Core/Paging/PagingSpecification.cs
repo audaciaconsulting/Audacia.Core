@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -19,18 +18,29 @@ namespace Audacia.Core
 
         private int _pageNumber;
         private int _pageSize = int.MaxValue;
-        private static Type Type { get; } = typeof(T);
+        private static readonly Type Type = typeof(T);
 
         public PagingSpecification(IQueryable<T> query)
         {
             Query = query;
         }
 
+        /// <summary>
+        /// Record paging information for use when getting the page of results
+        /// </summary>
+        /// <param name="pagingRequest">Contains the information required for applying paging.</param>
+        /// <returns></returns>
         public PagingSpecification<T> WithPaging(PagingRequest pagingRequest)
         {
             return WithPaging(pagingRequest.PageSize, pagingRequest.PageNumber);
         }
 
+        /// <summary>
+        /// Record paging information for use when getting the page of results
+        /// </summary>
+        /// <param name="pageSize">The number of results to show per page.</param>
+        /// <param name="pageNumber">Which page of results we want to show. The first page is 1.</param>
+        /// <returns></returns>
         public PagingSpecification<T> WithPaging(int? pageSize, int pageNumber)
         {
             _pageSize = pageSize ?? int.MaxValue;
@@ -38,12 +48,19 @@ namespace Audacia.Core
             return this;
         }
 
+        /// <summary>
+        /// Apply sorting to the query based on the provided <paramref name="pagingRequest"/>.
+        /// </summary>
+        /// <param name="pagingRequest">The request containing sorting & paging information.</param>
+        /// <exception cref="ArgumentException">If the provided sortProperty is invalid.</exception>
         public PagingSpecification<T> ApplySorting(SortablePagingRequest pagingRequest)
         {
-            SortQuery(pagingRequest.SortProperty, pagingRequest.Descending);
-            return this;
+            return ApplySorting(pagingRequest.SortProperty, pagingRequest.Descending);
         }
 
+        /// <summary>
+        /// Apply sorting to the query based on the provided <paramref name="sortProperty"/> & <see cref="descending"/>.
+        /// </summary>
         /// <param name="sortProperty">The property of <typeparamref name="T"/> we'll sort by</param>
         /// <param name="descending">The sort direction</param>
         /// <exception cref="ArgumentException">If the provided <paramref name="sortProperty"/> is invalid.</exception>
@@ -62,6 +79,11 @@ namespace Audacia.Core
             return this;
         }
 
+        /// <summary>
+        /// Get the number of pages the results take up, based on the provided <paramref name="totalRecords"/>.
+        /// </summary>
+        /// <param name="totalRecords">The total number of records.</param>
+        /// <returns></returns>
         public int GetTotalPages(int totalRecords)
         {
             var totalPages = Math.Max((int) Math.Ceiling(totalRecords / (double) _pageSize), 1);

@@ -225,7 +225,7 @@ namespace Audacia.Core.Extensions
         /// <param name="propertyName"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException">If the property doesn't exist on T</exception>
-        public static Expression<Func<T, object>> ToPredicate<T>(this string propertyName)
+        public static Expression<Func<T, object>> ToExpression<T>(this string propertyName)
         {
             //Upper case first to account from lower case JSON
             var type = typeof(T);
