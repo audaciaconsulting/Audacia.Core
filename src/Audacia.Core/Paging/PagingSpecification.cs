@@ -19,6 +19,8 @@ namespace Audacia.Core
         private int _pageNumber;
         private int _pageSize = int.MaxValue;
         private static readonly Type Type = typeof(T);
+        private string _sortProperty = string.Empty;
+        private bool _descending = false;
 
         public PagingSpecification(IQueryable<T> query)
         {
@@ -28,11 +30,11 @@ namespace Audacia.Core
         /// <summary>
         /// Record paging information for use when getting the page of results
         /// </summary>
-        /// <param name="pagingRequest">Contains the information required for applying paging.</param>
+        /// <param name="pagingRequest">Contains the information required for paging.</param>
         /// <returns></returns>
-        public PagingSpecification<T> WithPaging(PagingRequest pagingRequest)
+        public PagingSpecification<T> ConfigurePaging(PagingRequest pagingRequest)
         {
-            return WithPaging(pagingRequest.PageSize, pagingRequest.PageNumber);
+            return ConfigurePaging(pagingRequest.PageSize, pagingRequest.PageNumber);
         }
 
         /// <summary>
@@ -41,7 +43,7 @@ namespace Audacia.Core
         /// <param name="pageSize">The number of results to show per page.</param>
         /// <param name="pageNumber">Which page of results we want to show. The first page is 1.</param>
         /// <returns></returns>
-        public PagingSpecification<T> WithPaging(int? pageSize, int pageNumber)
+        public PagingSpecification<T> ConfigurePaging(int? pageSize, int pageNumber)
         {
             _pageSize = pageSize ?? int.MaxValue;
             _pageNumber = pageNumber;
@@ -49,31 +51,42 @@ namespace Audacia.Core
         }
 
         /// <summary>
-        /// Apply sorting to the query based on the provided <paramref name="pagingRequest"/>.
+        /// Record sorting information for use when sorting the results
         /// </summary>
-        /// <param name="pagingRequest">The request containing sorting & paging information.</param>
-        /// <exception cref="ArgumentException">If the provided sortProperty is invalid.</exception>
-        public PagingSpecification<T> ApplySorting(SortablePagingRequest pagingRequest)
+        /// <param name="pagingRequest">Contains the information required for sorting.</param>
+        /// <returns></returns>
+        public PagingSpecification<T> ConfigureSorting(SortablePagingRequest pagingRequest)
         {
-            return ApplySorting(pagingRequest.SortProperty, pagingRequest.Descending);
+            return ConfigureSorting(pagingRequest.SortProperty, pagingRequest.Descending);
         }
 
         /// <summary>
-        /// Apply sorting to the query based on the provided <paramref name="sortProperty"/> & <see cref="descending"/>.
+        /// Record sorting information for use when sorting the results
         /// </summary>
-        /// <param name="sortProperty">The property of <typeparamref name="T"/> we'll sort by</param>
-        /// <param name="descending">The sort direction</param>
-        /// <exception cref="ArgumentException">If the provided <paramref name="sortProperty"/> is invalid.</exception>
-        public PagingSpecification<T> ApplySorting(string sortProperty, bool descending)
+        /// <param name="sortProperty">The property of <typeparamref name="T"/> we want to sort.</param>
+        /// <param name="descending">The sort direction.</param>
+        /// <returns></returns>
+        public PagingSpecification<T> ConfigureSorting(string sortProperty, bool descending)
         {
-            SortQuery(sortProperty, descending);
+            _sortProperty = sortProperty;
+            _descending = descending;
+            return this;
+        }
+
+        /// <summary>
+        /// Sort the query based on the configured sorting information
+        /// </summary>
+        /// <exception cref="ArgumentException">If our configured sortProperty is invalid.</exception>
+        public PagingSpecification<T> UseSorting()
+        {
+            SortQuery();
             return this;
         }
 
         /// <summary>
         /// Update the Query to return a page of results
         /// </summary>
-        public PagingSpecification<T> ApplyPaging()
+        public PagingSpecification<T> UsePaging()
         {
             Query = Query.Skip(_pageNumber * _pageSize).Take(_pageSize);
             return this;
@@ -92,25 +105,25 @@ namespace Audacia.Core
             return totalPages;
         }
 
-        private void SortQuery(string sortProperty, bool descending)
+        private void SortQuery()
         {
-            if (string.IsNullOrWhiteSpace(sortProperty))
+            if (string.IsNullOrWhiteSpace(_sortProperty))
             {
                 return;
             }
 
             //Upper case first to account for lower case JSON
-            var propertyInfo = Type.GetProperty(sortProperty.UpperCaseFirst());
+            var propertyInfo = Type.GetProperty(_sortProperty.UpperCaseFirst());
 
             if (propertyInfo == null)
             {
                 // Someone has provided a sort property that doesn't exist on the result
-                throw new ArgumentException("Invalid Sort Property", nameof(sortProperty));
+                throw new ApplicationException($"Invalid Sort Property: {_sortProperty}");
             }
 
             var orderByExpression = GetOrderByExpression(propertyInfo);
 
-            var orderMethod = descending ? nameof(Queryable.OrderByDescending) : nameof(Queryable.OrderBy);
+            var orderMethod = _descending ? nameof(Queryable.OrderByDescending) : nameof(Queryable.OrderBy);
 
             var method =
                 typeof(Queryable).GetMethods().First(m => m.Name == orderMethod && m.GetParameters().Length == 2);

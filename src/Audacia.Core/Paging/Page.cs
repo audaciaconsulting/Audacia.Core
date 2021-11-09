@@ -15,26 +15,29 @@ namespace Audacia.Core
 
         public Page(IQueryable<T> query, SortablePagingRequest sortablePagingRequest)
         {
-            var specification = new PagingSpecification<T>(query)
-                .WithPaging(sortablePagingRequest);
-
+            var specification = new PagingSpecification<T>(query);
+            
             // Get total count before paging is applied
             TotalRecords = specification.Query.Count();
+            
             specification = specification
-                .ApplySorting(sortablePagingRequest)
-                .ApplyPaging();
+                .ConfigurePaging(sortablePagingRequest)
+                .ConfigureSorting(sortablePagingRequest)
+                .UseSorting()
+                .UsePaging();
             TotalPages = specification.GetTotalPages(TotalRecords);
             Data = specification.Query.ToList();
         }
 
         public Page(IQueryable<T> query, PagingRequest pagingRequest)
         {
-            var specification = new PagingSpecification<T>(query)
-                .WithPaging(pagingRequest);
-
             // Get total count before paging is applied
+            var specification = new PagingSpecification<T>(query);
             TotalRecords = specification.Query.Count();
-            specification = specification.ApplyPaging();
+
+            specification = specification
+                .ConfigurePaging(pagingRequest)
+                .UsePaging();
             TotalPages = specification.GetTotalPages(TotalRecords);
             Data = specification.Query.ToList();
         }
