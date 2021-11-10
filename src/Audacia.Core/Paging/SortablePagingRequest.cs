@@ -1,5 +1,8 @@
 ﻿namespace Audacia.Core
 {
+    /// <summary>
+    /// Request to sort, and apply paging to a list of results.
+    /// </summary>
     public class SortablePagingRequest : PagingRequest
     {
         public SortablePagingRequest()
@@ -13,8 +16,14 @@
         {
         }
 
+        /// <summary>
+        /// Gets or sets the property of the destination type we'll sort by.
+        /// </summary>
         public string SortProperty { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating the sort direction.
+        /// </summary>
         public bool Descending { get; set; }
     }
 }

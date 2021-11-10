@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -215,6 +216,31 @@ namespace Audacia.Core.Extensions
         public static string UpperCaseFirst(this string input)
         {
             return input.Any() ? char.ToUpperInvariant(input[0]) + input.Substring(1) : input;
+        }
+
+        /// <summary>
+        /// Given the name of a property return an expression representing `t => t.{propertyName}`
+        /// </summary>
+        /// <typeparam name="T">The type that the property must live on</typeparam>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">If the property doesn't exist on T</exception>
+        public static Expression<Func<T, object>> ToExpression<T>(this string propertyName)
+        {
+            //Upper case first to account from lower case JSON
+            var type = typeof(T);
+            var propertyInfo = type.GetProperty(propertyName.UpperCaseFirst());
+
+            if (propertyInfo == null)
+            {
+                // Someone has provided a property that doesn't exist on the object
+                throw new ArgumentException($"Provided property name isn't a member of {typeof(T).Name}", nameof(propertyName));
+            }
+
+            var parameterExpression = Expression.Parameter(type);
+            var propertyExpression = Expression.PropertyOrField(parameterExpression, propertyInfo.Name);
+
+            return Expression.Lambda<Func<T, object>>(propertyExpression, parameterExpression);
         }
     }
 }
