@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EDD28F6C-87B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{3C8B0465-D40F-477A-80E1-4AF53F9F6E46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audacia.Core.Tests", "Audacia.Core.Tests\Audacia.Core.Tests.csproj", "{5C96EBE7-FE1A-49D7-B966-7E25555E1389}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audacia.Core.Tests", "tests\Audacia.Core.Tests\Audacia.Core.Tests.csproj", "{5C96EBE7-FE1A-49D7-B966-7E25555E1389}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
