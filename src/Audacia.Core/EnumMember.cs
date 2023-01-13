@@ -248,7 +248,8 @@ namespace Audacia.Core
             {
                 if (MatchesEnumMember(field, value) ||
                     MatchesDescription(field, value) ||
-                    MatchesName(field, value))
+                    MatchesName(field, value) ||
+                    MatchesDisplayName(field,value))
                 {
                     return field.GetValue(null);
                 }
@@ -365,6 +366,18 @@ namespace Audacia.Core
             if (attribute != null)
             {
                 return string.Equals(attribute.Value, value, StringComparison.OrdinalIgnoreCase);
+            }
+
+            return false;
+        }
+
+        private static bool MatchesDisplayName(MemberInfo member, string value)
+        {
+            var attribute = member.GetCustomAttribute<DisplayNameAttribute>(false);
+
+            if(attribute != null)
+            {
+                return string.Equals(attribute.DisplayName, value, StringComparison.OrdinalIgnoreCase);
             }
 
             return false;
