@@ -1,23 +1,33 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using Xunit;
 
 namespace Audacia.Core.Tests.EnumMember
 {
     public class EnumMemberTests
     {
-        enum ExampleEnum
+        enum Users
         {
-            January = 1,
-            February = 2,
-            March = 3,
-            April = 4,
-            May = 5,
-            June = 6,
-            July = 7,
-            August = 8,
-            September = 9,
-            October = 10,
-            November = 11,
-            December = 12,           
+            Zahra = 1,
+            Betahn = 2,
+            Rai = 3,
+            Rose = 4,
+            Sam = 5,
+            Fiona = 6,
+            Faezan = 7
+        }
+
+        [Fact]
+        public static void Check_if_Parsing_returns_expected_result()
+        {
+            //Arrange 
+            var arrtibutes = new IEnumerable<CustomAttributeData> { DisplayName };
+            var user = new MemberInfo() { CustomAttributes = }
+
+            //Act
+
+            //Assert
+
         }
     }
 }

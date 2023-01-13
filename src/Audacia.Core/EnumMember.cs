@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -249,6 +250,7 @@ namespace Audacia.Core
                 if (MatchesEnumMember(field, value) ||
                     MatchesDescription(field, value) ||
                     MatchesName(field, value) ||
+                    MatchesDisplay(field,value) ||
                     MatchesDisplayName(field,value))
                 {
                     return field.GetValue(null);
@@ -366,6 +368,18 @@ namespace Audacia.Core
             if (attribute != null)
             {
                 return string.Equals(attribute.Value, value, StringComparison.OrdinalIgnoreCase);
+            }
+
+            return false;
+        }
+
+        private static bool MatchesDisplay(MemberInfo member, string value)
+        {
+            var attribute = member.GetCustomAttribute<DisplayAttribute>(false);
+
+            if (attribute != null)
+            {
+                return string.Equals(attribute.Name, value, StringComparison.OrdinalIgnoreCase);
             }
 
             return false;
