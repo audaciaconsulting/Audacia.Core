@@ -1,33 +1,121 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+using Audacia.Core;
+using FluentAssertions;
 using Xunit;
 
 namespace Audacia.Core.Tests.EnumMember
 {
     public class EnumMemberTests
     {
-        enum Users
+        
+        enum Day
         {
-            Zahra = 1,
-            Betahn = 2,
-            Rai = 3,
-            Rose = 4,
-            Sam = 5,
-            Fiona = 6,
-            Faezan = 7
+            [EnumMember(Value ="Church Day")]
+            Sunday,
+
+            //[DisplayName("First day")]
+            Monday,
+             
+            Tuesday,
+
+            [Display(Name ="Mid-week")]
+            Wednesday,
+
+            Thursday,
+
+            [Description("A fun day of the week")]
+            Friday,
+
+            Saturday
         }
 
         [Fact]
-        public static void Check_if_Parsing_returns_expected_result()
+        public static void Check_if_enum_member_parsing_returns_expected_result()
         {
             //Arrange 
-            var arrtibutes = new IEnumerable<CustomAttributeData> { DisplayName };
-            var user = new MemberInfo() { CustomAttributes = }
+            var value = "Church Day";
+            var expectedResult = Day.Sunday;
 
             //Act
+            var result = Core.EnumMember.Parse<Day>(value);
 
             //Assert
+            Assert.Equal(expectedResult, result);
 
+        }
+
+        [Fact]
+        public static void Check_if_description_parsing_returns_expected_result()
+        {
+            //Arrange 
+            var value = "A fun day of the week";
+            var expectedResult = Day.Friday;
+
+            //Act
+            var result = Core.EnumMember.Parse<Day>(value);
+
+            //Assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public static void Check_if_display_parsing_returns_expected_result()
+        {
+            //Arrange 
+            var value = "Mid-week";
+            var expectedResult = Day.Wednesday;
+
+            //Act
+            var result = Core.EnumMember.Parse<Day>(value);
+
+            //Assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public static void Check_that_parsing_with_no_attribute_returns_expected_result()
+        {
+            //Arrange 
+            var value = "Saturday";
+            var expectedResult = Day.Saturday;
+
+            //Act
+            var result = Core.EnumMember.Parse<Day>(value);
+
+            //Assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public static void Check_that_overflow_exception_is_correcrtly_called()
+        {
+            //Arrange 
+            var value = "100";
+
+            //Act
+            var exception = Assert.Throws<OverflowException>(() => Core.EnumMember.Parse<Day>(value));
+
+            //Assert
+            Assert.Equal("Value '100' is outside the range of 'Day'.", exception.Message);
+        }
+
+        [Fact]
+        public static void Check_that_argument_exception_is_correctly_thrown()
+        {
+            //Arrange 
+            var value = "March";
+
+            //Act
+            //var result = Core.EnumMember.Parse<Day>(value);
+            var exception = Assert.Throws<ArgumentException>(() => Core.EnumMember.Parse<Day>(value));
+
+
+            //Assert
+             Assert.Equal("Requested value 'March' was not found.", exception.Message);
         }
     }
 }
