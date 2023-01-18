@@ -17,7 +17,6 @@ namespace Audacia.Core.Tests.EnumMember
             [EnumMember(Value ="Church Day")]
             Sunday,
 
-            //[DisplayName("First day")]
             Monday,
              
             Tuesday,
@@ -110,7 +109,6 @@ namespace Audacia.Core.Tests.EnumMember
             var value = "March";
 
             //Act
-            //var result = Core.EnumMember.Parse<Day>(value);
             var exception = Assert.Throws<ArgumentException>(() => Core.EnumMember.Parse<Day>(value));
 
 
