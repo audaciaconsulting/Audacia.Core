@@ -2,12 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.0.0</Version>
+    <Version>1.1.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <Authors>Philip Rashleigh</Authors>
-    <Company>Audacia</Company>
+    <Authors>Audacia</Authors>
     <Copyright>Copyright © Audacia 2018</Copyright>
-    <PackageIconUrl>https://girnka-dm2305.files.1drv.com/y4mUfw_5APiy6YhvPidloaNkO5IMUh4GTX222ecazimKACSrlsUoptXi3WHjmHmPtDIxhjfcG0AJHcQ4NDxm4tA13PEBjzjoEnKm5hcoNzxS1i6um3cBaB0o9AMT3PXAULs9utk0wG6YP7tmUmQ_UTSaiG9mNEcXM_t1_Eiguvs1XeaIKBjbb_WF8hTUMzmwY_pGG8BuM9CDcu7tpW2oxK7fw</PackageIconUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageIcon>package-icon.png</PackageIcon>
     <Description>Core extension methods, datetime provider and paging</Description>
-    </PropertyGroup>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<None Include="package-icon.png" Pack="true" PackagePath=""/>
+	</ItemGroup>
 </Project>
