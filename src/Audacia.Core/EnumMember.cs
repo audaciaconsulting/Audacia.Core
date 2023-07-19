@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -11,6 +12,8 @@ namespace Audacia.Core
     /// <summary>
     /// Provides a set of functions for converting enums to display name strings and back again.
     /// Supported attributes are;
+    /// <see cref="DisplayNameAttribute"/>,
+    /// <see cref="DisplayAttribute"/>,
     /// <see cref="DescriptionAttribute"/>,
     /// <see cref="EnumMemberAttribute"/>.
     /// </summary>
@@ -237,7 +240,7 @@ namespace Audacia.Core
             }
             else if (enumValue != null)
             {
-                throw new OverflowException($"Value '{value}' is outside the range of '${enumType.Name}'.");
+                throw new OverflowException($"Value '{value}' is outside the range of '{enumType.Name}'.");
             }
 
             // Get an enumerable of enum options
@@ -248,7 +251,8 @@ namespace Audacia.Core
             {
                 if (MatchesEnumMember(field, value) ||
                     MatchesDescription(field, value) ||
-                    MatchesName(field, value))
+                    MatchesName(field, value) ||
+                    MatchesDisplay(field,value))
                 {
                     return field.GetValue(null);
                 }
@@ -365,6 +369,18 @@ namespace Audacia.Core
             if (attribute != null)
             {
                 return string.Equals(attribute.Value, value, StringComparison.OrdinalIgnoreCase);
+            }
+
+            return false;
+        }
+
+        private static bool MatchesDisplay(MemberInfo member, string value)
+        {
+            var attribute = member.GetCustomAttribute<DisplayAttribute>(false);
+
+            if (attribute != null)
+            {
+                return string.Equals(attribute.Name, value, StringComparison.OrdinalIgnoreCase);
             }
 
             return false;
