@@ -24,14 +24,14 @@ namespace Audacia.Core.Extensions
         };
 
         /// <summary>
-        /// Determine of specified type is nullable
+        /// Determine of specified type is nullable.
         /// </summary>
         public static bool IsNullable(this Type @this)
         {
             return !@this.IsValueType || (@this.IsGenericType && @this.GetGenericTypeDefinition() == typeof(Nullable<>));
         }
         /// <summary>
-        /// Return underlying type if type is nullable otherwise return the type
+        /// Return underlying type if type is nullable otherwise return the type.
         /// </summary>
         public static Type GetUnderlyingTypeIfNullable(this Type @this)
         {
@@ -46,7 +46,7 @@ namespace Audacia.Core.Extensions
         /// <summary>
         /// Determines whether the underlying type is numeric.
         /// </summary>
-        /// <param name="t">Property Type</param> 
+        /// <param name="t">Property Type.</param> 
         /// <returns>true if the <see cref="TypeCode"/> is numeric.</returns>
         public static bool IsNumeric(this Type t)
         {

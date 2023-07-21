@@ -12,12 +12,12 @@ namespace Audacia.Core.Extensions
         }
 
         /// <summary>
-        /// Converts a grouped collection to a dictionary
+        /// Converts a grouped collection to a dictionary.
         /// </summary>
-        /// <typeparam name="TKey">The group key</typeparam>
-        /// <typeparam name="TValue">The group values</typeparam>
-        /// <param name="grouping">The grouped collection</param>
-        /// <returns>A dictionary, whose key is the groups key, and values are the values for that key</returns>
+        /// <typeparam name="TKey">The group key.</typeparam>
+        /// <typeparam name="TValue">The group values.</typeparam>
+        /// <param name="grouping">The grouped collection.</param>
+        /// <returns>A dictionary, whose key is the groups key, and values are the values for that key.</returns>
         public static IDictionary<TKey, List<TValue>> ToDictionary<TKey, TValue>(
             this IEnumerable<IGrouping<TKey, TValue>> grouping)
         {

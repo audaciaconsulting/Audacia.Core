@@ -10,7 +10,9 @@ namespace Audacia.Core
     public class Page<T> : IPage<T>
     {
         public int TotalPages { get; }
+
         public int TotalRecords { get; }
+
         public IEnumerable<T> Data { get; }
 
         public Page(IQueryable<T> query, SortablePagingRequest sortablePagingRequest)

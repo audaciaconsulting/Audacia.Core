@@ -9,11 +9,11 @@ namespace Audacia.Core.Extensions
     public static class DataTableExtensions
     {
         /// <summary>
-        /// Converts a DataTable to a CSV string
+        /// Converts a DataTable to a CSV string.
         /// </summary>
-        /// <param name="dataTable">The DataTable to convert</param>
-        /// <param name="delimiter">The delimiter to use in the converted string (defaults to ',')</param>
-        /// <returns>The converted string</returns>
+        /// <param name="dataTable">The DataTable to convert.</param>
+        /// <param name="delimiter">The delimiter to use in the converted string (defaults to ',').</param>
+        /// <returns>The converted string.</returns>
         public static string ToCsv(this DataTable dataTable, string delimiter = ",")
         {
             if (delimiter == "\"")

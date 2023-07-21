@@ -12,7 +12,7 @@ namespace Audacia.Core
     public class PagingSpecification<T>
     {
         /// <summary>
-        /// The underlying query for the data to be paged.
+        /// Gets the underlying query for the data to be paged.
         /// </summary>
         public IQueryable<T> Query { get; private set; }
 
@@ -28,7 +28,7 @@ namespace Audacia.Core
         }
 
         /// <summary>
-        /// Record paging information for use when getting the page of results
+        /// Record paging information for use when getting the page of results.
         /// </summary>
         /// <param name="pagingRequest">Contains the information required for paging.</param>
         /// <returns></returns>
@@ -38,7 +38,7 @@ namespace Audacia.Core
         }
 
         /// <summary>
-        /// Record paging information for use when getting the page of results
+        /// Record paging information for use when getting the page of results.
         /// </summary>
         /// <param name="pageSize">The number of results to show per page.</param>
         /// <param name="pageNumber">Which page of results we want to show. The first page is 1.</param>
@@ -51,7 +51,7 @@ namespace Audacia.Core
         }
 
         /// <summary>
-        /// Record sorting information for use when sorting the results
+        /// Record sorting information for use when sorting the results.
         /// </summary>
         /// <param name="pagingRequest">Contains the information required for sorting.</param>
         /// <returns></returns>
@@ -61,7 +61,7 @@ namespace Audacia.Core
         }
 
         /// <summary>
-        /// Record sorting information for use when sorting the results
+        /// Record sorting information for use when sorting the results.
         /// </summary>
         /// <param name="sortProperty">The property of <typeparamref name="T"/> we want to sort.</param>
         /// <param name="descending">The sort direction.</param>
@@ -74,7 +74,7 @@ namespace Audacia.Core
         }
 
         /// <summary>
-        /// Sort the query based on the configured sorting information
+        /// Sort the query based on the configured sorting information.
         /// </summary>
         /// <exception cref="ArgumentException">If our configured sortProperty is invalid.</exception>
         public PagingSpecification<T> UseSorting()
@@ -84,7 +84,7 @@ namespace Audacia.Core
         }
 
         /// <summary>
-        /// Update the Query to return a page of results
+        /// Update the Query to return a page of results.
         /// </summary>
         public PagingSpecification<T> UsePaging()
         {

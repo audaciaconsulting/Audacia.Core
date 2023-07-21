@@ -3,24 +3,24 @@
 namespace Audacia.Core
 {
     /// <summary>
-    /// An interface to provide a DateTime properties to other functionality, to allow for better mocking and testing
+    /// An interface to provide a DateTime properties to other functionality, to allow for better mocking and testing.
     /// </summary>
     public interface IDateTimeOffsetProvider
     {
         /// <summary>
-        /// Mockable DateTimeOffset.UtcNow replacement
+        /// Gets mockable DateTimeOffset.UtcNow replacement.
         /// </summary>
         DateTimeOffset UtcNow { get; }
         /// <summary>
-        /// Mockable DateTimeOffset.Now replacement
+        /// Gets mockable DateTimeOffset.Now replacement.
         /// </summary>
         DateTimeOffset Now { get; }
         /// <summary>
-        /// Mockable DateTime.Today replacement
+        /// Gets mockable DateTime.Today replacement.
         /// </summary>
         DateTimeOffset Today { get; }
         /// <summary>
-        /// Mockable DateTime.Today replacement, but being the date from UtcNow
+        /// Gets mockable DateTime.Today replacement, but being the date from UtcNow.
         /// </summary>
         DateTimeOffset UtcToday { get; }
     }

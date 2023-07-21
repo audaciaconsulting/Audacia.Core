@@ -11,10 +11,10 @@ namespace Audacia.Core.Extensions
     public static class DateTimeExtensions
     {
         /// <summary>
-        /// Returns a suffix depending on the input date (i.e. nd, rd, th)
+        /// Returns a suffix depending on the input date (i.e. nd, rd, th).
         /// </summary>
-        /// <param name="date">The date</param>
-        /// <returns>The suffix string</returns>
+        /// <param name="date">The date.</param>
+        /// <returns>The suffix string.</returns>
         public static string TwoLetterSuffix(this DateTime date)
         {
             var dayMod10 = date.Day % 10;
@@ -37,11 +37,11 @@ namespace Audacia.Core.Extensions
 
         /// <summary>
         /// If a month is longer than the requested month, will choose the last day of
-        /// the requested month instead of continuing into the start of the month after
+        /// the requested month instead of continuing into the start of the month after.
         /// </summary>
-        /// <param name="date">The start date</param>
-        /// <param name="months">The number of months to add</param>
-        /// <returns>The resultant date</returns>
+        /// <param name="date">The start date.</param>
+        /// <param name="months">The number of months to add.</param>
+        /// <returns>The resultant date.</returns>
         public static DateTime AddJustMonths(this DateTime date, int months)
         {
             var firstDayOfTargetMonth = new DateTime(date.Year, date.Month, 1).AddMonths(months);
@@ -53,12 +53,12 @@ namespace Audacia.Core.Extensions
         }
 
         /// <summary>
-        /// Add business days to a date (does not support bank holidays)
+        /// Add business days to a date (does not support bank holidays).
         /// </summary>
-        /// <param name="startDate">The start date</param>
-        /// <param name="businessDays">The number of days to add</param>
-        /// <param name="skipDays">Days to skip (e.g. bank holidays)</param>
-        /// <returns>The resultant date</returns>
+        /// <param name="startDate">The start date.</param>
+        /// <param name="businessDays">The number of days to add.</param>
+        /// <param name="skipDays">Days to skip (e.g. bank holidays).</param>
+        /// <returns>The resultant date.</returns>
         public static DateTime AddBusinessDays(this DateTime startDate, double businessDays, IEnumerable<DateTime> skipDays = null)
         {
             if (skipDays == null)
@@ -80,10 +80,10 @@ namespace Audacia.Core.Extensions
         }
 
         /// <summary>
-        /// Determines whether or not the current date is a business day
+        /// Determines whether or not the current date is a business day.
         /// </summary>
-        /// <param name="date">The date to test</param>
-        /// <param name="skipDays">Days to skip (e.g. bank holidays)</param>
+        /// <param name="date">The date to test.</param>
+        /// <param name="skipDays">Days to skip (e.g. bank holidays).</param>
         /// <returns></returns>
         public static bool IsBusinessDay(this DateTime date, IEnumerable<DateTime> skipDays = null)
         {
@@ -98,13 +98,13 @@ namespace Audacia.Core.Extensions
         }
 
         /// <summary>
-        /// Gets the business days between two dates (does not support bank holidays)
+        /// Gets the business days between two dates (does not support bank holidays).
         /// </summary>
-        /// <param name="startDate">The start date</param>
-        /// <param name="endDate">The end date</param>
-        /// <param name="exclusive">Calculate inclusive or exclusive of start and end date</param>
-        /// <param name="skipDays">Days to skip (e.g. bank holidays)</param>
-        /// <returns>The number of business days between</returns>
+        /// <param name="startDate">The start date.</param>
+        /// <param name="endDate">The end date.</param>
+        /// <param name="exclusive">Calculate inclusive or exclusive of start and end date.</param>
+        /// <param name="skipDays">Days to skip (e.g. bank holidays).</param>
+        /// <returns>The number of business days between.</returns>
         public static double GetBusinessDaysUntil(this DateTime startDate, DateTime endDate, bool exclusive = false, ICollection<DateTime> skipDays = null)
         {
             if (skipDays == null)

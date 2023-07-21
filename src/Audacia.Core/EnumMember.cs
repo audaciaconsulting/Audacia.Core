@@ -23,7 +23,7 @@ namespace Audacia.Core
         /// Retrieves the description for all fields on the provided enum type.
         /// For fields without a <see cref="DescriptionAttribute"/>, <see langword="null"/> will be returned.
         /// </summary>
-        /// <param name="enumType">Enum type</param>
+        /// <param name="enumType">Enum type.</param>
         public static IEnumerable<string> Descriptions(Type enumType)
         {
             ValidateEnumType(enumType);
@@ -38,7 +38,7 @@ namespace Audacia.Core
         /// Retrieves the description for all fields on the provided enum type.
         /// For fields without a <see cref="DescriptionAttribute"/>, <see langword="null"/> will be returned.
         /// </summary>
-        /// <typeparam name="TEnum">Enum type</typeparam>
+        /// <typeparam name="TEnum">Enum type.</typeparam>
         public static IEnumerable<string> Descriptions<TEnum>() where TEnum : struct
         {
             return Descriptions(typeof(TEnum));
@@ -48,7 +48,7 @@ namespace Audacia.Core
         /// Retrieves the enum member value for all fields on the provided enum type.
         /// For fields without a <see cref="EnumMemberAttribute"/>, <see langword="null"/> will be returned.
         /// </summary>
-        /// <param name="enumType">Enum type</param>
+        /// <param name="enumType">Enum type.</param>
         public static IEnumerable<string> EnumMemberValues(Type enumType)
         {
             ValidateEnumType(enumType);
@@ -63,7 +63,7 @@ namespace Audacia.Core
         /// Retrieves the enum member value for all fields on the provided enum type.
         /// For fields without a <see cref="EnumMemberAttribute"/>, <see langword="null"/> will be returned.
         /// </summary>
-        /// <typeparam name="TEnum">Enum type</typeparam>
+        /// <typeparam name="TEnum">Enum type.</typeparam>
         public static IEnumerable<string> EnumMemberValues<TEnum>() where TEnum : struct
         {
             return EnumMemberValues(typeof(TEnum));
@@ -72,7 +72,7 @@ namespace Audacia.Core
         /// <summary>
         /// Retrieves the field name for all fields on the provided enum type.
         /// </summary>
-        /// <param name="enumType">Enum type</param>
+        /// <param name="enumType">Enum type.</param>
         public static IEnumerable<string> Names(Type enumType)
         {
             ValidateEnumType(enumType);
@@ -86,7 +86,7 @@ namespace Audacia.Core
         /// <summary>
         /// Retrieves the field name for all fields on the provided enum type.
         /// </summary>
-        /// <typeparam name="TEnum">Enum type</typeparam>
+        /// <typeparam name="TEnum">Enum type.</typeparam>
         public static IEnumerable<string> Names<TEnum>() where TEnum : struct
         {
             return Names(typeof(TEnum));
@@ -95,7 +95,7 @@ namespace Audacia.Core
         /// <summary>
         /// Retrieves the first available human readable name for all fields in the provided enum type.
         /// </summary>
-        /// <param name="enumType">Enum type</param>
+        /// <param name="enumType">Enum type.</param>
         public static IEnumerable<string> Options(Type enumType)
         {
             ValidateEnumType(enumType);
@@ -109,7 +109,7 @@ namespace Audacia.Core
         /// <summary>
         /// Retrieves the first available human readable name for all fields in the provided enum type.
         /// </summary>
-        /// <typeparam name="TEnum">Enum type</typeparam>
+        /// <typeparam name="TEnum">Enum type.</typeparam>
         public static IEnumerable<string> Options<TEnum>() where TEnum : struct
         {
             return Options(typeof(TEnum));
@@ -119,8 +119,8 @@ namespace Audacia.Core
         /// Returns the value set on the <see cref="DescriptionAttribute"/>.
         /// For fields without a <see cref="DescriptionAttribute"/>, <see langword="null"/> will be returned.
         /// </summary>
-        /// <param name="enumValue">Enum value</param>
-        /// <returns>The description string</returns>
+        /// <param name="enumValue">Enum value.</param>
+        /// <returns>The description string.</returns>
         public static string GetDescription(object enumValue)
         {
             ValidateValueObject(enumValue);
@@ -138,8 +138,8 @@ namespace Audacia.Core
         /// Returns the value set on the <see cref="EnumMemberAttribute"/>.
         /// For fields without a <see cref="EnumMemberAttribute"/>, <see langword="null"/> will be returned.
         /// </summary>
-        /// <param name="enumValue">Enum value</param>
-        /// <returns>The enummember value string</returns>
+        /// <param name="enumValue">Enum value.</param>
+        /// <returns>The enummember value string.</returns>
         public static string GetEnumMemberValue(object enumValue)
         {
             ValidateValueObject(enumValue);
@@ -156,8 +156,8 @@ namespace Audacia.Core
         /// <summary>
         /// Returns the field name for the enum value.
         /// </summary>
-        /// <param name="enumValue">Enum value</param>
-        /// <returns>The field name</returns>
+        /// <param name="enumValue">Enum value.</param>
+        /// <returns>The field name.</returns>
         public static string GetName(object enumValue)
         {
             ValidateValueObject(enumValue);
@@ -172,7 +172,7 @@ namespace Audacia.Core
         /// <summary>
         /// Returns the first available human readable name for the enum value.
         /// </summary>
-        /// <param name="enumValue">Enum value</param>
+        /// <param name="enumValue">Enum value.</param>
         public static string GetOption(object enumValue)
         {
             return GetDescription(enumValue) ??
@@ -184,8 +184,8 @@ namespace Audacia.Core
         /// <summary>
         /// Returns the enum value as a text integer.
         /// </summary>
-        /// <param name="enumValue">Enum value</param>
-        /// <returns>The field name</returns>
+        /// <param name="enumValue">Enum value.</param>
+        /// <returns>The field name.</returns>
         public static string GetValue(object enumValue)
         {
             ValidateValueObject(enumValue);
@@ -200,8 +200,8 @@ namespace Audacia.Core
         /// <summary>
         /// Gets the value of an enum which corresponds to the specified enum member, display name, or description.
         /// </summary>
-        /// <param name="enumType">Enum type</param>
-        /// <param name="value">Input value</param>
+        /// <param name="enumType">Enum type.</param>
+        /// <param name="value">Input value.</param>
         /// <exception cref="ArgumentNullException">enumType or value is null.</exception>
         /// <exception cref="ArgumentException">
         ///     enumType is not an System.Enum.
@@ -209,7 +209,7 @@ namespace Audacia.Core
         ///     Or value is a name, but not one of the named constants defined for the enumeration.
         /// </exception>
         /// <exception cref="OverflowException">value is outside the range of the underlying type of enumType.</exception>
-        /// <returns>The enum value as an object</returns>
+        /// <returns>The enum value as an object.</returns>
         public static object Parse(Type enumType, string value)
         {
             ValidateEnumType(enumType);
@@ -264,8 +264,8 @@ namespace Audacia.Core
         /// <summary>
         /// Gets the value of an enum which corresponds to the specified enum member, display name, or description.
         /// </summary>
-        /// <typeparam name="TEnum">Enum type</typeparam>
-        /// <param name="value">Input value</param>
+        /// <typeparam name="TEnum">Enum type.</typeparam>
+        /// <param name="value">Input value.</param>
         /// <exception cref="ArgumentNullException">enumType or value is null.</exception>
         /// <exception cref="ArgumentException">
         ///     enumType is not an System.Enum.
@@ -273,7 +273,7 @@ namespace Audacia.Core
         ///     Or value is a name, but not one of the named constants defined for the enumeration.
         /// </exception>
         /// <exception cref="OverflowException">value is outside the range of the underlying type of enumType.</exception>
-        /// <returns>The enum value as an object</returns>
+        /// <returns>The enum value as an object.</returns>
         public static TEnum Parse<TEnum>(string value) where TEnum : struct
         {
             return (TEnum)Parse(typeof(TEnum), value);
@@ -282,10 +282,10 @@ namespace Audacia.Core
         /// <summary>
         /// Gets the value of an enum which corresponds to the specified enum member, display name, or description.
         /// </summary>
-        /// <param name="enumType">Enum type</param>
-        /// <param name="value">Input value</param>
-        /// <param name="enumValue">The enum value as an object</param>
-        /// <returns><see langword="true" /> if parsed successfully</returns>
+        /// <param name="enumType">Enum type.</param>
+        /// <param name="value">Input value.</param>
+        /// <param name="enumValue">The enum value as an object.</param>
+        /// <returns><see langword="true" /> if parsed successfully.</returns>
         public static bool TryParse(Type enumType, string value, out object enumValue) 
         {
             try
@@ -304,10 +304,10 @@ namespace Audacia.Core
         /// <summary>
         /// Gets the value of an enum which corresponds to the specified enum member, display name, or description.
         /// </summary>
-        /// <typeparam name="TEnum">Enum type</typeparam>
-        /// <param name="value">Input value</param>
-        /// <param name="enumValue">The enum value as an object</param>
-        /// <returns><see langword="true" /> if parsed successfully</returns>
+        /// <typeparam name="TEnum">Enum type.</typeparam>
+        /// <param name="value">Input value.</param>
+        /// <param name="enumValue">The enum value as an object.</param>
+        /// <returns><see langword="true" /> if parsed successfully.</returns>
         public static bool TryParse<TEnum>(string value, out TEnum enumValue) where TEnum : struct
         {
             if (TryParse(typeof(TEnum), value, out var enumObj))
@@ -323,8 +323,8 @@ namespace Audacia.Core
         /// <summary>
         /// Retrieves the value for all fields on the provided enum type.
         /// </summary>
-        /// <typeparam name="TEnum">Enum type</typeparam>
-        /// <returns>An integer array of enum values</returns>
+        /// <typeparam name="TEnum">Enum type.</typeparam>
+        /// <returns>An integer array of enum values.</returns>
         public static IEnumerable<int> Values(Type enumType)
         {
             ValidateEnumType(enumType);
@@ -335,8 +335,8 @@ namespace Audacia.Core
         /// <summary>
         /// Retrieves the value for all fields on the provided enum type.
         /// </summary>
-        /// <typeparam name="TEnum">Enum type</typeparam>
-        /// <returns>An array of enum values</returns>
+        /// <typeparam name="TEnum">Enum type.</typeparam>
+        /// <returns>An array of enum values.</returns>
         public static IEnumerable<TEnum> Values<TEnum>() where TEnum : struct
         {
             var enumType = typeof(TEnum);

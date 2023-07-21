@@ -22,7 +22,7 @@
         public string SortProperty { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating the sort direction.
+        /// Gets or sets a value indicating whether gets or sets a value indicating the sort direction.
         /// </summary>
         public bool Descending { get; set; }
     }

@@ -13,10 +13,10 @@ namespace Audacia.Core.Extensions
     public static class StringExtensions
     {
         /// <summary>
-        /// Removes invalid file name characters from a string to resturn a string than can be used as part of a filename or directory structure
+        /// Removes invalid file name characters from a string to resturn a string than can be used as part of a filename or directory structure.
         /// </summary>
-        /// <param name="input">The input string</param>
-        /// <returns>The output string with unsafe characters removed</returns>
+        /// <param name="input">The input string.</param>
+        /// <returns>The output string with unsafe characters removed.</returns>
         public static string ToSafeFilename(this string input)
         {
             var invalidCharacters = Path.GetInvalidFileNameChars();
@@ -25,13 +25,13 @@ namespace Audacia.Core.Extensions
         }
 
         /// <summary>
-        /// Attempts to convert any string to the requested type
+        /// Attempts to convert any string to the requested type.
         /// </summary>
-        /// <typeparam name="T">The type to convert to</typeparam>
-        /// <param name="input">The string to convert</param>
-        /// <param name="output">The converted result (or default if convert fails)</param>
-        /// <param name="invariant">Whether to use culture invariance in the conversion</param>
-        /// <returns>Whether the conversion passed or failed</returns>
+        /// <typeparam name="T">The type to convert to.</typeparam>
+        /// <param name="input">The string to convert.</param>
+        /// <param name="output">The converted result (or default if convert fails).</param>
+        /// <param name="invariant">Whether to use culture invariance in the conversion.</param>
+        /// <returns>Whether the conversion passed or failed.</returns>
         public static bool TryConvertToType<T>(this string input, out T output, bool invariant = false)
         {
             try
@@ -47,22 +47,22 @@ namespace Audacia.Core.Extensions
         }
 
         /// <summary>
-        /// Adds spaces before capitals in a string
+        /// Adds spaces before capitals in a string.
         /// </summary>
-        /// <param name="source">The source string</param>
-        /// <returns>The transformed string</returns>
+        /// <param name="source">The source string.</param>
+        /// <returns>The transformed string.</returns>
         public static string AddSpacesBeforeCapitals(this string source)
         {
             return Regex.Replace(source, @"(\B[A-Z]+?(?=[A-Z][^A-Z])|\B[A-Z]+?(?=[^A-Z]))", " $1");
         }
 
         /// <summary>
-        /// Converts any string to the requested type
+        /// Converts any string to the requested type.
         /// </summary>
-        /// <typeparam name="T">The type to convert to</typeparam>
-        /// <param name="input">The string to convert</param>
-        /// <param name="invariant">Whether to use culture invariance in the conversion</param>
-        /// <returns>The converted string</returns>
+        /// <typeparam name="T">The type to convert to.</typeparam>
+        /// <param name="input">The string to convert.</param>
+        /// <param name="invariant">Whether to use culture invariance in the conversion.</param>
+        /// <returns>The converted string.</returns>
         public static T ConvertToType<T>(this string input, bool invariant = false)
         {
             var typeConverter = TypeDescriptor.GetConverter(typeof(T));
@@ -71,11 +71,11 @@ namespace Audacia.Core.Extensions
         }
 
         /// <summary>
-        /// Replace any instances of the dictionary keys with the dictionary values in the requested string
+        /// Replace any instances of the dictionary keys with the dictionary values in the requested string.
         /// </summary>
-        /// <param name="source">The source string</param>
-        /// <param name="findReplace">The find and replace pairs</param>
-        /// <returns>The resultant string</returns>
+        /// <param name="source">The source string.</param>
+        /// <param name="findReplace">The find and replace pairs.</param>
+        /// <returns>The resultant string.</returns>
         public static string FindAndReplace(this string source, IDictionary<string, string> findReplace)
         {
             var stringBuilder = new StringBuilder(source);
@@ -89,31 +89,31 @@ namespace Audacia.Core.Extensions
         }
 
         /// <summary>
-        /// Takes a substring from the end of a string
+        /// Takes a substring from the end of a string.
         /// </summary>
-        /// <param name="input">The source string</param>
-        /// <param name="tailLength">The length of the substring</param>
-        /// <returns>The substring</returns>
+        /// <param name="input">The source string.</param>
+        /// <param name="tailLength">The length of the substring.</param>
+        /// <returns>The substring.</returns>
         public static string SubstringFromEnd(this string input, int tailLength)
         {
             return tailLength >= input.Length ? input : input.Substring(input.Length - tailLength);
         }
 
         /// <summary>
-        /// Converts a string to title case
+        /// Converts a string to title case.
         /// </summary>
-        /// <param name="source">The source string</param>
-        /// <returns>The converted string</returns>
+        /// <param name="source">The source string.</param>
+        /// <returns>The converted string.</returns>
         public static string ToTitleCase(this string source)
         {
             return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(source);
         }
 
         /// <summary>
-        /// Removes non numeric values from a string
+        /// Removes non numeric values from a string.
         /// </summary>
-        /// <param name="source">The source string</param>
-        /// <returns>The string stripped of everything except numerals, full stops and negative figures</returns>
+        /// <param name="source">The source string.</param>
+        /// <returns>The string stripped of everything except numerals, full stops and negative figures.</returns>
         public static string RemoveNonNumeric(this string source)
         {
             return string.IsNullOrWhiteSpace(source)
@@ -122,10 +122,10 @@ namespace Audacia.Core.Extensions
         }
 
         /// <summary>
-        /// Removes numeric values from a string
+        /// Removes numeric values from a string.
         /// </summary>
-        /// <param name="source">The source string</param>
-        /// <returns>The string stripped of numerals</returns>
+        /// <param name="source">The source string.</param>
+        /// <returns>The string stripped of numerals.</returns>
         public static string RemoveNumeric(this string source)
         {
             return string.IsNullOrWhiteSpace(source)
@@ -134,10 +134,10 @@ namespace Audacia.Core.Extensions
         }
 
         /// <summary>
-        /// Determines whether the contents of a string are numeric
+        /// Determines whether the contents of a string are numeric.
         /// </summary>
-        /// <param name="input">The source string</param>
-        /// <returns>The result</returns>
+        /// <param name="input">The source string.</param>
+        /// <returns>The result.</returns>
         public static bool IsNumeric(this string input)
         {
             return !string.IsNullOrWhiteSpace(input) &&
@@ -145,21 +145,21 @@ namespace Audacia.Core.Extensions
         }
 
         /// <summary>
-        /// Determines whether a string contains numerals
+        /// Determines whether a string contains numerals.
         /// </summary>
-        /// <param name="input">The source string</param>
-        /// <returns>The result</returns>
+        /// <param name="input">The source string.</param>
+        /// <returns>The result.</returns>
         public static bool HasNumeric(this string input)
         {
             return !string.IsNullOrWhiteSpace(input) && input.ToCharArray().Any(char.IsDigit);
         }
 
         /// <summary>
-        /// Trims all instances of the requested string from the start of a string
+        /// Trims all instances of the requested string from the start of a string.
         /// </summary>
-        /// <param name="source">The source string</param>
-        /// <param name="trimmable">The string to strip from the start</param>
-        /// <returns>The stripped string</returns>
+        /// <param name="source">The source string.</param>
+        /// <param name="trimmable">The string to strip from the start.</param>
+        /// <returns>The stripped string.</returns>
         public static string TrimStart(this string source, string trimmable)
         {
             while (source.StartsWith(trimmable))
@@ -174,9 +174,9 @@ namespace Audacia.Core.Extensions
         /// Truncates a string by a specified number of characters, and includes an appended string if it exceeds a specified limits.
         /// NOTE: The amount of characters taken if the string exceeds the character limit is: (CharacterLimit - appendString.length).
         /// </summary>
-        /// <param name="source">The source string</param>
-        /// <param name="characterLimit">The amount of characters to accept before truncating</param>
-        /// <param name="appendStringIfLimitExceeded">Some characters to append if limit hit</param>
+        /// <param name="source">The source string.</param>
+        /// <param name="characterLimit">The amount of characters to accept before truncating.</param>
+        /// <param name="appendStringIfLimitExceeded">Some characters to append if limit hit.</param>
         /// <returns></returns>
         public static string Truncate(this string source, int characterLimit, string appendStringIfLimitExceeded = "...")
         {
@@ -189,42 +189,42 @@ namespace Audacia.Core.Extensions
         }
 
         /// <summary>
-        /// Split a camel case string into separate words
+        /// Split a camel case string into separate words.
         /// </summary>
         /// <param name="source"></param>
-        /// <returns>The split string</returns>
+        /// <returns>The split string.</returns>
         public static string SplitCamelCase(this string source)
         {
             return Regex.Replace(source, "([A-Z])", " $1", RegexOptions.Compiled).Trim();
         }
 
         /// <summary>
-        /// Lowercase the first character of a string
+        /// Lowercase the first character of a string.
         /// </summary>
-        /// <param name="input">The source string</param>
-        /// <returns>The transformed string</returns>
+        /// <param name="input">The source string.</param>
+        /// <returns>The transformed string.</returns>
         public static string LowerCaseFirst(this string input)
         {
             return input.Any() ? char.ToLowerInvariant(input[0]) + input.Substring(1) : input;
         }
 
         /// <summary>
-        /// Uppercase the first character of a string
+        /// Uppercase the first character of a string.
         /// </summary>
-        /// <param name="input">The source string</param>
-        /// <returns>The transformed string</returns>
+        /// <param name="input">The source string.</param>
+        /// <returns>The transformed string.</returns>
         public static string UpperCaseFirst(this string input)
         {
             return input.Any() ? char.ToUpperInvariant(input[0]) + input.Substring(1) : input;
         }
 
         /// <summary>
-        /// Given the name of a property return an expression representing `t => t.{propertyName}`
+        /// Given the name of a property return an expression representing `t => t.{propertyName}`.
         /// </summary>
-        /// <typeparam name="T">The type that the property must live on</typeparam>
+        /// <typeparam name="T">The type that the property must live on.</typeparam>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException">If the property doesn't exist on T</exception>
+        /// <exception cref="ArgumentException">If the property doesn't exist on T.</exception>
         public static Expression<Func<T, object>> ToExpression<T>(this string propertyName)
         {
             //Upper case first to account from lower case JSON

@@ -8,13 +8,13 @@ namespace Audacia.Core.Extensions
     {
         /// <summary>
         /// Append <see cref="OrderBy{T,TKey}"/> or <see cref="ThenBy{T,TKey}"/>,
-        /// depending on whether the queryable has already been ordered
+        /// depending on whether the queryable has already been ordered.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TKey"></typeparam>
         /// <param name="query"></param>
         /// <param name="keySelector"></param>
-        /// <param name="descending">Sort direction</param>
+        /// <param name="descending">Sort direction.</param>
         /// <returns></returns>
         public static IOrderedQueryable<T> AppendOrderBy<T, TKey>(this IQueryable<T> query, Expression<Func<T, TKey>> keySelector, bool descending)
             => query.Expression.Type == typeof(IOrderedQueryable<T>)
@@ -23,13 +23,13 @@ namespace Audacia.Core.Extensions
 
 
         /// <summary>
-        /// Sort either ascending or descending, depending on the provided <see cref="descending"/>
+        /// Sort either ascending or descending, depending on the provided <see cref="descending"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TKey">Type of the property you're ordering by</typeparam>
+        /// <typeparam name="TKey">Type of the property you're ordering by.</typeparam>
         /// <param name="source"></param>
         /// <param name="propertyGetter"></param>
-        /// <param name="descending">Sort direction</param>
+        /// <param name="descending">Sort direction.</param>
         /// <returns></returns>
         public static IOrderedQueryable<T> OrderBy<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> propertyGetter, bool descending)
             => descending
@@ -41,10 +41,10 @@ namespace Audacia.Core.Extensions
         /// Sort either ascending or descending, depending on the provided <see cref="descending"/>. 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TKey">Type of the property you're ordering by</typeparam>
+        /// <typeparam name="TKey">Type of the property you're ordering by.</typeparam>
         /// <param name="source"></param>
         /// <param name="propertyGetter"></param>
-        /// <param name="descending">Sort direction</param>
+        /// <param name="descending">Sort direction.</param>
         /// <returns></returns>
         public static IOrderedQueryable<T> ThenBy<T, TKey>(this IOrderedQueryable<T> source, Expression<Func<T, TKey>> propertyGetter, bool descending)
             => descending

@@ -10,7 +10,7 @@ namespace Audacia.Core
     public interface IResult
     {
         /// <summary>
-        /// Gets a flag indicating whether the operation succeeded or failed.
+        /// Gets a value indicating whether gets a flag indicating whether the operation succeeded or failed.
         /// </summary>
         bool IsSuccess { get; }
 

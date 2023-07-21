@@ -5,11 +5,11 @@ namespace Audacia.Core.Extensions
     public static class StreamExtensions
     {
         /// <summary>
-        /// Copies a stream in to a new memory stream
+        /// Copies a stream in to a new memory stream.
         /// </summary>
-        /// <param name="source">The source stream</param>
-        /// <param name="close">Whether to close the original stream</param>
-        /// <returns>The copied stream</returns>
+        /// <param name="source">The source stream.</param>
+        /// <param name="close">Whether to close the original stream.</param>
+        /// <returns>The copied stream.</returns>
         public static MemoryStream ToMemoryStream(this Stream source, bool close = false)
         {
             const int readSize = 256;

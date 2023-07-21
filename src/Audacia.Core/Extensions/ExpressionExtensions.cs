@@ -114,7 +114,7 @@ namespace Audacia.Core.Extensions
         /// <typeparam name="TInter"></typeparam>
         /// <typeparam name="TOut"></typeparam>
         /// <param name="first"></param>
-        /// <param name="second">The second expression to apply to the result of the first</param>
+        /// <param name="second">The second expression to apply to the result of the first.</param>
         /// <returns></returns>
         public static Expression<Func<TIn, TOut>> Then<TIn, TInter, TOut>(this Expression<Func<TIn, TInter>> first, Expression<Func<TInter, TOut>> second)
         {
