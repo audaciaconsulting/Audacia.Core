@@ -9,7 +9,8 @@ using Xunit;
 
 namespace Audacia.Core.Tests.EnumMember
 {
-    public class EnumMemberTests
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Test names - Makes it easier to read.")]
+    public static class EnumMemberTests
     {
 
         enum Day

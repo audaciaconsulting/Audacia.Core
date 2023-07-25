@@ -29,7 +29,7 @@ public static class EnumMember
     /// <returns>A list of descriptions from the provided enum type.</returns>
     public static IEnumerable<string?> Descriptions(Type enumType)
     {
-        ValidateEnumType(enumType);
+        enumType = ValidateEnumType(enumType);
 
         foreach (var value in Enum.GetValues(enumType))
         {
@@ -56,7 +56,7 @@ public static class EnumMember
     /// <returns>A list of values from the provided enum type.</returns>
     public static IEnumerable<string?> EnumMemberValues(Type enumType)
     {
-        ValidateEnumType(enumType);
+        enumType = ValidateEnumType(enumType);
 
         foreach (var value in Enum.GetValues(enumType))
         {
@@ -82,7 +82,7 @@ public static class EnumMember
     /// <returns>A list of names from the provided enum type.</returns>
     public static IEnumerable<string?> Names(Type enumType)
     {
-        ValidateEnumType(enumType);
+        enumType = ValidateEnumType(enumType);
 
         foreach (var value in Enum.GetValues(enumType))
         {
@@ -107,7 +107,7 @@ public static class EnumMember
     /// <returns>A list of human readble names from the provided enum type.</returns>
     public static IEnumerable<string?> Options(Type enumType)
     {
-        ValidateEnumType(enumType);
+        enumType = ValidateEnumType(enumType);
 
         foreach (var value in Enum.GetValues(enumType))
         {
@@ -138,7 +138,7 @@ public static class EnumMember
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
-        ValidateEnumType(enumType);
+        enumType = ValidateEnumType(enumType);
 
         return GetFieldInfo(enumValue)
             ?.GetCustomAttribute<DescriptionAttribute>(false)
@@ -157,7 +157,7 @@ public static class EnumMember
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
-        ValidateEnumType(enumType);
+        enumType = ValidateEnumType(enumType);
 
         return GetFieldInfo(enumValue)
             ?.GetCustomAttribute<EnumMemberAttribute>(false)
@@ -175,7 +175,7 @@ public static class EnumMember
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
-        ValidateEnumType(enumType);
+        enumType = ValidateEnumType(enumType);
 
         return GetFieldInfo(enumValue)?.Name;
     }
@@ -241,11 +241,11 @@ public static class EnumMember
     /// </exception>
     /// <exception cref="OverflowException">value is outside the range of the underlying type of enumType.</exception>
     /// <returns>The enum value as an object.</returns>
-    public static object? Parse(Type enumType, string? value)
+    public static object? Parse(Type enumType, string value)
     {
-        ValidateEnumType(enumType);
+        enumType = ValidateEnumType(enumType);
 
-        value = SanitizeDisplayNameString(value);
+        value = SanitizeDisplayNameString(value) ?? string.Empty;
         ValidateValueString(value);
 
         object? enumValue = GetEnumValue(enumType, value);
@@ -261,7 +261,7 @@ public static class EnumMember
                 MatchesName(field, value) ||
                 MatchesDisplay(field, value))
             {
-                return field.GetValue(null);
+                return field.GetValue(null) ?? default!;
             }
         }
 
@@ -318,7 +318,7 @@ public static class EnumMember
     /// <returns>An integer array of enum values.</returns>
     public static IEnumerable<int> Values(Type enumType)
     {
-        ValidateEnumType(enumType);
+        enumType = ValidateEnumType(enumType);
 
         return (int[])Enum.GetValues(enumType);
     }
@@ -332,7 +332,7 @@ public static class EnumMember
     public static IEnumerable<TEnum> Values<TEnum>() where TEnum : struct
     {
         var enumType = typeof(TEnum);
-        ValidateEnumType(enumType);
+        enumType = ValidateEnumType(enumType);
 
         return (TEnum[])Enum.GetValues(typeof(TEnum));
     }
@@ -389,17 +389,24 @@ public static class EnumMember
         return value?.Replace("–", "-", StringComparison.InvariantCulture).Trim();
     }
 
-    private static void ValidateEnumType(Type enumType)
+    private static Type ValidateEnumType(Type enumType)
     {
         if (enumType == null)
         {
             throw new ArgumentNullException(nameof(enumType), "Type cannot be null.");
         }
 
+        if (enumType.IsNullable())
+        {
+            enumType = enumType.GetUnderlyingTypeIfNullable();
+        }
+
         if (!enumType.IsEnum)
         {
             throw new ArgumentException("Type must be an enum type.", nameof(enumType));
         }
+
+        return enumType;
     }
 
     private static void ValidateValueObject(object value)

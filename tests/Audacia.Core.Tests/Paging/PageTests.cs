@@ -116,7 +116,7 @@ namespace Audacia.Core.Tests.Paging
 
             Func<Page<ExampleDto>> act = () => new Page<ExampleDto>(query, pagingRequest);
 
-            act.Should().ThrowExactly<ApplicationException>();
+            act.Should().ThrowExactly<ArgumentException>();
         }
     }
 }
