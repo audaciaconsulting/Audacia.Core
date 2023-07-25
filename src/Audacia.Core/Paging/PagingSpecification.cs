@@ -40,10 +40,7 @@ public class PagingSpecification<T>
     /// <exception cref="ArgumentNullException"><paramref name="pagingRequest"/> is null.</exception>
     public PagingSpecification<T> ConfigurePaging(PagingRequest pagingRequest)
     {
-        if (pagingRequest == null)
-        {
-            throw new ArgumentNullException(nameof(pagingRequest), "Paging Request cannot be null");
-        }
+        ArgumentNullException.ThrowIfNull(pagingRequest);
 
         return ConfigurePaging(pagingRequest.PageSize, pagingRequest.PageNumber);
     }
@@ -69,10 +66,7 @@ public class PagingSpecification<T>
     /// <exception cref="ArgumentNullException"><paramref name="pagingRequest"/> is null.</exception>
     public PagingSpecification<T> ConfigureSorting(SortablePagingRequest pagingRequest)
     {
-        if (pagingRequest == null)
-        {
-            throw new ArgumentNullException(nameof(pagingRequest), "Paging Request cannot be null");
-        }
+        ArgumentNullException.ThrowIfNull(pagingRequest);
 
         return ConfigureSorting(pagingRequest.SortProperty, pagingRequest.Descending);
     }

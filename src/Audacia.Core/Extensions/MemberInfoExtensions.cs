@@ -18,10 +18,7 @@ public static class MemberInfoExtensions
     /// <exception cref="ArgumentNullException"><paramref name="memberInfo"/> is null.</exception>
     public static string? GetDataAnnotationDisplayName(this MemberInfo memberInfo)
     {
-        if (memberInfo == null)
-        {
-            throw new ArgumentNullException(nameof(memberInfo), "MemberInfo cannot be null");
-        }
+        ArgumentNullException.ThrowIfNull(memberInfo);
 
         var displayNameAttributes = (DisplayNameAttribute[])memberInfo.GetCustomAttributes(typeof(DisplayNameAttribute), false);
 

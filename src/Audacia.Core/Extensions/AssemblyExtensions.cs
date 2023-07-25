@@ -19,10 +19,7 @@ public static class AssemblyExtensions
     /// <exception cref="ArgumentNullException"><paramref name="assembly"/> is null.</exception>
     public static IEnumerable<TFilterType> GetNewInstancesOfInheritingTypesWithParameterlessConstructors<TFilterType>(this Assembly assembly) where TFilterType : class
     {
-        if (assembly == null)
-        {
-            throw new ArgumentNullException(nameof(assembly), "Assembly cannot be null");
-        }
+        ArgumentNullException.ThrowIfNull(assembly);
 
         var filterType = typeof(TFilterType);
 

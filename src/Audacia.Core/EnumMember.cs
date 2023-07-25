@@ -134,7 +134,7 @@ public static class EnumMember
     /// <returns>The value of <see cref="DescriptionAttribute"/> from the provided <paramref name="enumValue"/>.</returns>
     public static string? GetDescription(object enumValue)
     {
-        ValidateValueObject(enumValue);
+        ArgumentNullException.ThrowIfNull(enumValue);
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
@@ -153,7 +153,7 @@ public static class EnumMember
     /// <returns>The enummember value string.</returns>
     public static string? GetEnumMemberValue(object enumValue)
     {
-        ValidateValueObject(enumValue);
+        ArgumentNullException.ThrowIfNull(enumValue);
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
@@ -171,7 +171,7 @@ public static class EnumMember
     /// <returns>The field name.</returns>
     public static string? GetName(object enumValue)
     {
-        ValidateValueObject(enumValue);
+        ArgumentNullException.ThrowIfNull(enumValue);
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
@@ -200,7 +200,7 @@ public static class EnumMember
     /// <returns>The field name.</returns>
     public static string? GetValue(object enumValue)
     {
-        ValidateValueObject(enumValue);
+        ArgumentNullException.ThrowIfNull(enumValue);
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
@@ -391,10 +391,7 @@ public static class EnumMember
 
     private static Type ValidateEnumType(Type enumType)
     {
-        if (enumType == null)
-        {
-            throw new ArgumentNullException(nameof(enumType), "Type cannot be null.");
-        }
+        ArgumentNullException.ThrowIfNull(enumType);
 
         if (enumType.IsNullable())
         {
@@ -409,20 +406,9 @@ public static class EnumMember
         return enumType;
     }
 
-    private static void ValidateValueObject(object value)
-    {
-        if (value == null)
-        {
-            throw new ArgumentNullException(nameof(value), "Value cannot be null.");
-        }
-    }
-
     private static void ValidateValueString(string? value)
     {
-        if (value == null)
-        {
-            throw new ArgumentNullException(nameof(value), "Value cannot be null.");
-        }
+        ArgumentNullException.ThrowIfNull(value);
 
         if (string.IsNullOrWhiteSpace(value))
         {

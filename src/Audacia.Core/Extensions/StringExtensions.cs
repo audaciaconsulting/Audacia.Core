@@ -99,10 +99,7 @@ public static class StringExtensions
     {
         var typeConverter = TypeDescriptor.GetConverter(typeof(T));
 
-        if (input == null)
-        {
-            throw new ArgumentNullException(nameof(input), "Input cannot be null.");
-        }
+        ArgumentNullException.ThrowIfNull(input);
 
         return (T)(typeConverter.ConvertFromString(input) ?? throw new NotSupportedException("Input cannot be converted."));
     }
@@ -119,10 +116,7 @@ public static class StringExtensions
     {
         var typeConverter = TypeDescriptor.GetConverter(typeof(T));
 
-        if (input == null)
-        {
-            throw new ArgumentNullException(nameof(input), "Input cannot be null.");
-        }
+        ArgumentNullException.ThrowIfNull(input);
 
         return (T)(typeConverter.ConvertFromInvariantString(input) ?? throw new NotSupportedException("Input cannot be converted."));
     }

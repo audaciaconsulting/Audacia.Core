@@ -7,7 +7,7 @@ using System.Text;
 namespace Audacia.Core.Extensions;
 
 /// <summary>
-/// Return property information for a lambda property expression.
+/// Extension methods for the type <see cref="DataTable"/>.
 /// </summary>
 public static class DataTableExtensions
 {
@@ -34,10 +34,7 @@ public static class DataTableExtensions
 
     private static void ValidateArguments(DataTable dataTable, string delimiter)
     {
-        if (dataTable == null)
-        {
-            throw new ArgumentNullException(nameof(dataTable), delimiter);
-        }
+        ArgumentNullException.ThrowIfNull(dataTable);
 
         if (delimiter == "\"")
         {

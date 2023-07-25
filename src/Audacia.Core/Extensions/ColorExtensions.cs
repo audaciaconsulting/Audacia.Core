@@ -2,7 +2,8 @@
 
 namespace Audacia.Core.Extensions;
 
-/// <summary>Extension methods for the type <see cref="Color"/>.
+/// <summary>
+/// Extension methods for the type <see cref="Color"/>.
 /// </summary>
 public static class ColorExtensions
 {

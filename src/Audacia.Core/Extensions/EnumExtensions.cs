@@ -67,15 +67,8 @@ public static class EnumExtensions
 
     private static void ValidateEnumDescription(Type type, object enumValue)
     {
-        if (type == null)
-        {
-            throw new ArgumentNullException(nameof(type), "Type cannot be null");
-        }
-
-        if (enumValue == null)
-        {
-            throw new ArgumentNullException(nameof(enumValue), "Enum Value cannot be null");
-        }
+        ArgumentNullException.ThrowIfNull(type);
+        ArgumentNullException.ThrowIfNull(enumValue);
 
         if (!type.IsEnum)
         {

@@ -34,10 +34,7 @@ public static class TypeExtensions
     /// <returns>If the type is nullable.</returns>
     public static bool IsNullable(this Type @this)
     {
-        if (@this == null)
-        {
-            throw new ArgumentNullException(nameof(@this), "Type cannot be null");
-        }
+        ArgumentNullException.ThrowIfNull(@this);
 
         return !@this.IsValueType || (@this.IsGenericType && @this.GetGenericTypeDefinition() == typeof(Nullable<>));
     }
@@ -50,10 +47,7 @@ public static class TypeExtensions
     /// <exception cref="ArgumentNullException"><paramref name="this"/> is null.</exception>
     public static Type GetUnderlyingTypeIfNullable(this Type @this)
     {
-        if (@this == null)
-        {
-            throw new ArgumentNullException(nameof(@this), "Type cannot be null");
-        }
+        ArgumentNullException.ThrowIfNull(@this);
 
         if (@this.IsNullable())
         {

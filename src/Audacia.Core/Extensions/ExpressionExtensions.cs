@@ -23,10 +23,8 @@ public static class ExpressionExtensions
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "AV1551:Method overload should call another overload", Justification = "This is called from another overload.")]
     public static PropertyInfo? GetPropertyInfo(Expression propertyExpression)
     {
-        if (propertyExpression == null)
-        {
-            throw new ArgumentNullException(nameof(propertyExpression), "Type cannot be null");
-        }
+
+        ArgumentNullException.ThrowIfNull(propertyExpression);
 
         if (propertyExpression.NodeType != ExpressionType.Lambda)
         {
@@ -176,10 +174,7 @@ public static class ExpressionExtensions
     /// <exception cref="ArgumentNullException"><paramref name="expression"/> is null.</exception>
     public static Expression<Func<T, bool>> Not<T>(this Expression<Func<T, bool>> expression)
     {
-        if (expression == null)
-        {
-            throw new ArgumentNullException(nameof(expression), "Expression cannot be null");
-        }
+        ArgumentNullException.ThrowIfNull(expression);
 
         var negated = Expression.Not(expression.Body);
         return Expression.Lambda<Func<T, bool>>(negated, expression.Parameters);
@@ -197,8 +192,8 @@ public static class ExpressionExtensions
     /// <exception cref="ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
     public static Expression<Func<TIn, TOut>> Then<TIn, TInter, TOut>(this Expression<Func<TIn, TInter>> first, Expression<Func<TInter, TOut>> second)
     {
-        _ = first ?? throw new ArgumentNullException(nameof(first), "Expression cannot be null");
-        _ = second ?? throw new ArgumentNullException(nameof(second), "Expression cannot be null");
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
 
         //Map the parameters of the second expression to the body of the first
         var replacements = second.Parameters
@@ -222,9 +217,9 @@ public static class ExpressionExtensions
     public static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second,
         Func<Expression, Expression, Expression> merge)
     {
-        _ = first ?? throw new ArgumentNullException(nameof(first), "Expression cannot be null");
-        _ = second ?? throw new ArgumentNullException(nameof(second), "Expression cannot be null");
-        _ = merge ?? throw new ArgumentNullException(nameof(merge), "Expression cannot be null");
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        ArgumentNullException.ThrowIfNull(merge);
 
         // zip parameters (map from parameters of second to parameters of first)
         var map = first.Parameters
@@ -288,10 +283,7 @@ public static class ExpressionExtensions
 
         protected override Expression VisitMember(MemberExpression node)
         {
-            if (node == null)
-            {
-                throw new ArgumentNullException(nameof(node), "Node cannot be null");
-            }
+            ArgumentNullException.ThrowIfNull(node);
 
             if (node.Member.DeclaringType == _source)
             {
