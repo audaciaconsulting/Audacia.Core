@@ -23,7 +23,6 @@ public static class ExpressionExtensions
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "AV1551:Method overload should call another overload", Justification = "This is called from another overload.")]
     public static PropertyInfo? GetPropertyInfo(Expression propertyExpression)
     {
-
         ArgumentNullException.ThrowIfNull(propertyExpression);
 
         if (propertyExpression.NodeType != ExpressionType.Lambda)

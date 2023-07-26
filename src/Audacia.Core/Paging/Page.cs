@@ -12,7 +12,8 @@ public class Page<T> : IPage<T>
     /// <summary>
     /// Gets the number of pages in the data before being filtered.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "AV1710:Member name includes the name of its containing type", Justification = "Makes sense.")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "AV1710:Member name includes the name of its containing type", 
+        Justification = "The 'TotalPages' property in the 'Page' class does not merely repeat the type name, but instead represents a different concept: the total number of 'Page' instances in a higher-level object. The name is chosen to clearly express this concept and make the code more understandable.")]
     public int TotalPages { get; }
 
     /// <summary>

@@ -18,7 +18,8 @@ namespace Audacia.Core;
 /// <see cref="DescriptionAttribute"/>,
 /// <see cref="EnumMemberAttribute"/>.
 /// </summary>
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "AV1710:Member name includes the name of its containing type", Justification = "Helper class - Names are easier to understand.")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "AV1710:Member name includes the name of its containing type", 
+    Justification = "This helper class includes its own name in a number of it's members, this is reference to the 'EnumMemberAttribute' as is chose to clearly indicate the source of the value.")]
 public static class EnumMember
 {
     /// <summary>
