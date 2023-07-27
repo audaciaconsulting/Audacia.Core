@@ -50,7 +50,7 @@ public static class CollectionExtensions
 
         foreach (var item in source)
         {
-            destination?.Add(item);
+            destination.Add(item);
         }
     }
 
