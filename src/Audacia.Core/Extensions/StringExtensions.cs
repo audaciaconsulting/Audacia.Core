@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -17,7 +16,7 @@ namespace Audacia.Core.Extensions;
 public static class StringExtensions
 {
     /// <summary>
-    /// Removes invalid file name characters from a string to resturn a string than can be used as part of a filename or directory structure.
+    /// Removes invalid file name characters from a string to returns a string than can be used as part of a filename or directory structure.
     /// </summary>
     /// <param name="input">The input string.</param>
     /// <returns>The output string with unsafe characters removed.</returns>
@@ -36,41 +35,17 @@ public static class StringExtensions
     /// <typeparam name="T">The type to convert to.</typeparam>
     /// <param name="input">The string to convert.</param>
     /// <param name="output">The converted result (or default if convert fails).</param>
+    /// <param name="isInvariant">Whether to use culture invariance in the conversion.</param>
     /// <returns>Whether the conversion passed or failed.</returns>
-    public static bool TryConvertToType<T>(this string input, out T output)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "AV1564:Parameter in public or internal member is of type bool or bool?", Justification = "Easy to understand and implement.")]
+    public static bool TryConvertToType<T>(this string input, out T output, bool isInvariant = false)
     {
         try
         {
-            output = input.ConvertToType<T>();
+            output = input.ConvertToType<T>(isInvariant);
             return true;
         }
         catch (NotSupportedException)
-        {
-            output = default!;
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Attempts to convert any string to the requested type.
-    /// </summary>
-    /// <typeparam name="T">The type to convert to.</typeparam>
-    /// <param name="input">The string to convert.</param>
-    /// <param name="output">The converted result (or default if convert fails).</param>
-    /// <returns>Whether the conversion passed or failed.</returns>
-    public static bool TryConvertToTypeInvariant<T>(this string input, out T output)
-    {
-        try
-        {
-            output = input.ConvertToTypeInvariant<T>();
-            return true;
-        }
-        catch (NotSupportedException)
-        {
-            output = default!;
-            return false;
-        }
-        catch (ArgumentException)
         {
             output = default!;
             return false;
@@ -92,33 +67,19 @@ public static class StringExtensions
     /// </summary>
     /// <typeparam name="T">The type to convert to.</typeparam>
     /// <param name="input">The string to convert.</param>
+    /// <param name="invariant">Whether to use culture invariance in the conversion.</param>
     /// <returns>The converted string.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="input"/> is null.</exception>
     /// <exception cref="NotSupportedException">If cannot convert from input.</exception>
-    public static T ConvertToType<T>(this string input)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "AV1564:Parameter in public or internal member is of type bool or bool?", Justification = "Easy to understand and implement.")]
+    public static T ConvertToType<T>(this string input, bool invariant = false)
     {
         var typeConverter = TypeDescriptor.GetConverter(typeof(T));
 
         ArgumentNullException.ThrowIfNull(input);
 
-        return (T)(typeConverter.ConvertFromString(input) ?? throw new NotSupportedException("Input cannot be converted."));
-    }
+        var result = (invariant ? typeConverter.ConvertFromInvariantString(input) : typeConverter.ConvertFromString(input));
 
-    /// <summary>
-    /// Converts an invariant string to the requested type.
-    /// </summary>
-    /// <typeparam name="T">The type to convert to.</typeparam>
-    /// <param name="input">The string to convert.</param>
-    /// <returns>The converted string.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="input"/> is null.</exception>
-    /// <exception cref="NotSupportedException">If cannot convert from input.</exception>
-    public static T ConvertToTypeInvariant<T>(this string input)
-    {
-        var typeConverter = TypeDescriptor.GetConverter(typeof(T));
-
-        ArgumentNullException.ThrowIfNull(input);
-
-        return (T)(typeConverter.ConvertFromInvariantString(input) ?? throw new NotSupportedException("Input cannot be converted."));
+        return (T)(result ?? throw new NotSupportedException("Input cannot be converted."));
     }
 
     /// <summary>
@@ -283,7 +244,7 @@ public static class StringExtensions
     }
 
     /// <summary>
-    /// Given the name of a property return an expression representing `t => t.{<paramref name="propertyName"/>}`.
+    /// Given the name of a property return an expression representing `t => t.{propertyName}`.
     /// </summary>
     /// <typeparam name="T">The type that the property must live on.</typeparam>
     /// <param name="propertyName">The name of the property to return.</param>
