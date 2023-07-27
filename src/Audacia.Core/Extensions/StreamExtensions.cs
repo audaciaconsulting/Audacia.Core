@@ -12,15 +12,20 @@ public static class StreamExtensions
     /// Copies a stream in to a new memory stream.
     /// </summary>
     /// <param name="source">The source stream.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+    /// <param name="close">Whether to close the original stream.</param>
     /// <returns>The copied stream.</returns>
-    public static MemoryStream ToMemoryStream(this Stream source)
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "AV1564:Parameter in public or internal member is of type bool or bool?", Justification = "Easy to understand and implement.")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "ACL1002:Member or local function contains too many statements", Justification = "Easier to read and understand.")]
+    public static MemoryStream ToMemoryStream(this Stream source, bool close = false)
     {
         const int readSize = 256;
         var buffer = new byte[readSize];
         var memoryStream = new MemoryStream();
 
-        var count = source?.Read(buffer, 0, readSize) ?? throw new ArgumentNullException(nameof(source), "Source can not be null");
+        ArgumentNullException.ThrowIfNull(source);
+
+        var count = source.Read(buffer, 0, readSize);
 
         while (count > 0)
         {
@@ -30,19 +35,10 @@ public static class StreamExtensions
 
         memoryStream.Position = 0;
 
-        return memoryStream;
-    }
-
-    /// <summary>
-    /// Copies a stream in to a new memory stream and closes it once complete.
-    /// </summary>
-    /// <param name="source">The source stream.</param>
-    /// <returns>The copied stream.</returns>
-    public static MemoryStream ToMemoryStreamThenClose(this Stream source)
-    {
-        var memoryStream = ToMemoryStream(source);
-
-        source.Close();
+        if (close)
+        {
+            source.Close();
+        }
 
         return memoryStream;
     }
