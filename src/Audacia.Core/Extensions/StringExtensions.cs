@@ -35,14 +35,14 @@ public static class StringExtensions
     /// <typeparam name="T">The type to convert to.</typeparam>
     /// <param name="input">The string to convert.</param>
     /// <param name="output">The converted result (or default if convert fails).</param>
-    /// <param name="isInvariant">Whether to use culture invariance in the conversion.</param>
+    /// <param name="invariant">Whether to use culture invariance in the conversion.</param>
     /// <returns>Whether the conversion passed or failed.</returns>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "AV1564:Parameter in public or internal member is of type bool or bool?", Justification = "Easy to understand and implement.")]
-    public static bool TryConvertToType<T>(this string input, out T output, bool isInvariant = false)
+    public static bool TryConvertToType<T>(this string input, out T output, bool invariant = false)
     {
         try
         {
-            output = input.ConvertToType<T>(isInvariant);
+            output = input.ConvertToType<T>(invariant);
             return true;
         }
         catch (NotSupportedException)
