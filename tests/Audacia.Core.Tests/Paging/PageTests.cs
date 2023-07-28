@@ -10,9 +10,9 @@ namespace Audacia.Core.Tests.Paging
     {
         private class ExampleDto
         {
-            public string SortColumn { get; set; }    
+            public string SortColumn { get; set; }
         }
-        
+
         [Fact]
         public void Total_count_populated_based_on_result_count()
         {
@@ -27,7 +27,7 @@ namespace Audacia.Core.Tests.Paging
 
             page.TotalRecords.Should().Be(dataCount);
         }
-        
+
         [Fact]
         public void Number_of_pages_is_rounded_up_when_partial_page_is_filled()
         {
@@ -42,7 +42,7 @@ namespace Audacia.Core.Tests.Paging
 
             page.TotalPages.Should().Be(2);
         }
-        
+
         [Fact]
         public void Results_skipped_if_page_number_is_greater_than_one()
         {
@@ -62,7 +62,7 @@ namespace Audacia.Core.Tests.Paging
 
             page.Data.Should().NotContain(expectedExcludedRow);
         }
-        
+
         [Fact]
         public void All_results_returned_if_no_page_size_specified()
         {
@@ -87,7 +87,7 @@ namespace Audacia.Core.Tests.Paging
                 SortProperty = nameof(ExampleDto.SortColumn),
                 Descending = true
             };
-            var expectedExcludedRow = new ExampleDto{ SortColumn = "A"};
+            var expectedExcludedRow = new ExampleDto { SortColumn = "A" };
             var query = new List<ExampleDto>
             {
                 new ExampleDto{ SortColumn = "C"},
@@ -116,7 +116,7 @@ namespace Audacia.Core.Tests.Paging
 
             Func<Page<ExampleDto>> act = () => new Page<ExampleDto>(query, pagingRequest);
 
-            act.Should().ThrowExactly<ApplicationException>();
+            act.Should().ThrowExactly<ArgumentException>();
         }
     }
 }

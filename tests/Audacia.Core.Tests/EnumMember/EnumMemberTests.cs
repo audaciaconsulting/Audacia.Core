@@ -9,19 +9,20 @@ using Xunit;
 
 namespace Audacia.Core.Tests.EnumMember
 {
-    public class EnumMemberTests
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Test names - Makes it easier to read.")]
+    public static class EnumMemberTests
     {
-        
+
         enum Day
         {
-            [EnumMember(Value ="Church Day")]
+            [EnumMember(Value = "Church Day")]
             Sunday,
 
             Monday,
-             
+
             Tuesday,
 
-            [Display(Name ="Mid-week")]
+            [Display(Name = "Mid-week")]
             Wednesday,
 
             Thursday,
@@ -111,9 +112,8 @@ namespace Audacia.Core.Tests.EnumMember
             //Act
             var exception = Assert.Throws<ArgumentException>(() => Core.EnumMember.Parse<Day>(value));
 
-
             //Assert
-             Assert.Equal("Requested value 'March' was not found.", exception.Message);
+            Assert.Equal("Requested value 'March' was not found.", exception.Message);
         }
     }
 }
