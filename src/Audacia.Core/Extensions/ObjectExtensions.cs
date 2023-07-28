@@ -5,7 +5,7 @@ using System.Linq;
 namespace Audacia.Core.Extensions;
 
 /// <summary>
-/// Return property information for a lambda property expression.
+/// Extension methods for the type <see cref="object"/>.
 /// </summary>
 public static class ObjectExtensions
 {

@@ -19,11 +19,11 @@ public static class StreamExtensions
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "ACL1002:Member or local function contains too many statements", Justification = "Easier to read and understand.")]
     public static MemoryStream ToMemoryStream(this Stream source, bool close = false)
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         const int readSize = 256;
         var buffer = new byte[readSize];
         var memoryStream = new MemoryStream();
-
-        ArgumentNullException.ThrowIfNull(source);
 
         var count = source.Read(buffer, 0, readSize);
 
