@@ -2,29 +2,30 @@
 using System.ComponentModel;
 using System.Linq;
 
-namespace Audacia.Core.Extensions;
-
-/// <summary>
-/// Extension methods for the type <see cref="object"/>.
-/// </summary>
-public static class ObjectExtensions
+namespace Audacia.Core.Extensions
 {
     /// <summary>
-    /// Converts an object to a dictionary with key = property name, value = value.
+    /// Extension methods for the type <see cref="object"/>.
     /// </summary>
-    /// <param name="obj">The object to convert.</param>
-    /// <returns>Dictionary with key = property name, value = value.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Member Design", "AV1130:Return type in method signature should be an interface to an unchangeable collection", Justification = "Type is limited to dictionaries.")]
-    public static IDictionary<string, object?> ToPropertyDictionary(this object obj)
+    public static class ObjectExtensions
     {
-        if (obj == null)
+        /// <summary>
+        /// Converts an object to a dictionary with key = property name, value = value.
+        /// </summary>
+        /// <param name="obj">The object to convert.</param>
+        /// <returns>Dictionary with key = property name, value = value.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Member Design", "AV1130:Return type in method signature should be an interface to an unchangeable collection", Justification = "Type is limited to dictionaries.")]
+        public static IDictionary<string, object> ToPropertyDictionary(this object obj)
         {
-            return new Dictionary<string, object?>();
-        }
+            if (obj == null)
+            {
+                return new Dictionary<string, object>();
+            }
 
-        return
-            TypeDescriptor.GetProperties(obj.GetType())
-                .OfType<PropertyDescriptor>()
-                .ToDictionary(property => property.Name, property => property.GetValue(obj));
+            return
+                TypeDescriptor.GetProperties(obj.GetType())
+                    .OfType<PropertyDescriptor>()
+                    .ToDictionary(property => property.Name, property => property.GetValue(obj));
+        }
     }
 }

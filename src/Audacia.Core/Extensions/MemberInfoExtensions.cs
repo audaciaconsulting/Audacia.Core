@@ -3,37 +3,41 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace Audacia.Core.Extensions;
-
-/// <summary>
-/// Extension methods for the type <see cref="MemberInfo"/>.
-/// </summary>
-public static class MemberInfoExtensions
+namespace Audacia.Core.Extensions
 {
     /// <summary>
-    /// Get <see cref="DisplayNameAttribute"/> from a property, event or public void method.
+    /// Extension methods for the type <see cref="MemberInfo"/>.
     /// </summary>
-    /// <param name="memberInfo">Member metadata.</param>
-    /// <returns>The display name.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="memberInfo"/> is null.</exception>
-    public static string? GetDataAnnotationDisplayName(this MemberInfo memberInfo)
+    public static class MemberInfoExtensions
     {
-        ArgumentNullException.ThrowIfNull(memberInfo);
-
-        var displayNameAttributes = (DisplayNameAttribute[])memberInfo.GetCustomAttributes(typeof(DisplayNameAttribute), false);
-
-        if (displayNameAttributes.Any())
+        /// <summary>
+        /// Get <see cref="DisplayNameAttribute"/> from a property, event or public void method.
+        /// </summary>
+        /// <param name="memberInfo">Member metadata.</param>
+        /// <returns>The display name.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="memberInfo"/> is null.</exception>
+        public static string? GetDataAnnotationDisplayName(this MemberInfo memberInfo)
         {
-            return displayNameAttributes[0].DisplayName;
+            if (memberInfo == null)
+            {
+                throw new ArgumentNullException(nameof(memberInfo));
+            }
+
+            var displayNameAttributes = (DisplayNameAttribute[])memberInfo.GetCustomAttributes(typeof(DisplayNameAttribute), false);
+
+            if (displayNameAttributes.Any())
+            {
+                return displayNameAttributes[0].DisplayName;
+            }
+
+            var descriptionAttributes = (DescriptionAttribute[])memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            if (descriptionAttributes.Any())
+            {
+                return descriptionAttributes[0].Description;
+            }
+
+            return memberInfo.Name;
         }
-
-        var descriptionAttributes = (DescriptionAttribute[])memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
-
-        if (descriptionAttributes.Any())
-        {
-            return descriptionAttributes[0].Description;
-        }
-
-        return memberInfo.Name;
     }
 }
