@@ -1,27 +1,28 @@
 ﻿using System;
 
-namespace Audacia.Core;
-
-/// <summary>
-/// A default instance of DateTime provider to provide the standard Now, UtcNow and Today functionality.
-/// </summary>
-public static class DateTimeOffsetProvider
+namespace Audacia.Core
 {
-    private static readonly IDateTimeOffsetProvider DefaultProviderInstance = new DefaultDateTimeProvider();
-
     /// <summary>
-    /// Gets default Instance as a singleton.
+    /// A default instance of DateTime provider to provide the standard Now, UtcNow and Today functionality.
     /// </summary>
-    public static IDateTimeOffsetProvider Instance { get; } = DefaultProviderInstance;
-
-    private class DefaultDateTimeProvider : IDateTimeOffsetProvider
+    public static class DateTimeOffsetProvider
     {
-        public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
+        private static readonly IDateTimeOffsetProvider DefaultProviderInstance = new DefaultDateTimeProvider();
 
-        public DateTimeOffset Now => DateTimeOffset.Now;
+        /// <summary>
+        /// Gets default Instance as a singleton.
+        /// </summary>
+        public static IDateTimeOffsetProvider Instance { get; } = DefaultProviderInstance;
 
-        public DateTimeOffset Today => DateTime.Today;
+        private class DefaultDateTimeProvider : IDateTimeOffsetProvider
+        {
+            public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
 
-        public DateTimeOffset UtcToday => new DateTimeOffset(DateTimeOffset.UtcNow.Date, default(TimeSpan));
+            public DateTimeOffset Now => DateTimeOffset.Now;
+
+            public DateTimeOffset Today => DateTime.Today;
+
+            public DateTimeOffset UtcToday => new DateTimeOffset(DateTimeOffset.UtcNow.Date, default(TimeSpan));
+        }
     }
 }
