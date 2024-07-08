@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Audacia.Core.Extensions.Helpers;
 
 namespace Audacia.Core.Extensions
 {
@@ -20,7 +20,10 @@ namespace Audacia.Core.Extensions
         /// <exception cref="ArgumentException"><paramref name="propertyExpression"/> is not a lambda expression.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="propertyExpression"/> does not have a declaring type.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="propertyExpression"/> is null.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "AV1551:Method overload should call another overload", Justification = "This is called from another overload.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Maintainability",
+            "AV1551:Method overload should call another overload",
+            Justification = "This is called from another overload.")]
         public static PropertyInfo? GetPropertyInfo(Expression propertyExpression)
         {
             if (propertyExpression == null)
@@ -89,7 +92,10 @@ namespace Audacia.Core.Extensions
         /// <typeparam name="TResult">The returned value.</typeparam>
         /// <param name="root">The original expression.</param>
         /// <returns>An expression with <typeparamref name="TSource"/> replaced with <typeparamref name="TTarget"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "AV1551:Method overload should call another overload", Justification = "Other method with same name isn't the same functionality.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Maintainability",
+            "AV1551:Method overload should call another overload",
+            Justification = "Other method with same name isn't the same functionality.")]
         public static Expression<Func<TTarget, TResult>> ConvertGenericTypeArgument<TSource, TTarget, TResult>(
             this Expression<Func<TSource, TResult>> root)
         {
@@ -124,7 +130,8 @@ namespace Audacia.Core.Extensions
         /// <exception cref="ArgumentNullException"><paramref name="expression"/> is null.</exception>
         public static TResult Execute<T, TResult>(this Expression<Func<T, TResult>> expression, T arg)
         {
-            return (expression ?? throw new ArgumentNullException(nameof(expression), "Expression cannot be null")).Compile()(arg);
+            return (expression ?? throw new ArgumentNullException(nameof(expression), "Expression cannot be null"))
+                .Compile()(arg);
         }
 
         /// <summary>
@@ -136,7 +143,8 @@ namespace Audacia.Core.Extensions
         /// <exception cref="ArgumentNullException"><paramref name="expression"/> is null.</exception>
         public static void Perform<T>(this Expression<Action<T>> expression, T arg)
         {
-            (expression ?? throw new ArgumentNullException(nameof(expression), "Expression cannot be null")).Compile()(arg);
+            (expression ?? throw new ArgumentNullException(nameof(expression), "Expression cannot be null"))
+                .Compile()(arg);
         }
 
         /// <summary>
@@ -195,7 +203,9 @@ namespace Audacia.Core.Extensions
         /// <param name="second">The second expression to apply to the result of the first.</param>
         /// <returns>An expression to run <paramref name="second"/> after <paramref name="first"/> expression.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
-        public static Expression<Func<TIn, TOut>> Then<TIn, TInter, TOut>(this Expression<Func<TIn, TInter>> first, Expression<Func<TInter, TOut>> second)
+        public static Expression<Func<TIn, TOut>> Then<TIn, TInter, TOut>(
+            this Expression<Func<TIn, TInter>> first,
+            Expression<Func<TInter, TOut>> second)
         {
             if (first == null)
             {
@@ -254,75 +264,6 @@ namespace Audacia.Core.Extensions
 
             // create a merged lambda expression with parameters from the first expression
             return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
-        }
-
-        private class ParameterRebinder : ExpressionVisitor
-        {
-            private readonly IDictionary<Expression, Expression> _map;
-
-            private ParameterRebinder(Dictionary<Expression, Expression> map)
-            {
-                _map = map ?? new Dictionary<Expression, Expression>();
-            }
-
-            public static Expression ReplaceParameters(
-                Dictionary<Expression, Expression> map,
-                Expression exp)
-            {
-                return new ParameterRebinder(map).Visit(exp);
-            }
-
-            protected override Expression VisitParameter(ParameterExpression p)
-            {
-                return _map.TryGetValue(p, out var replacement)
-                    ? replacement
-                    : base.VisitParameter(p);
-            }
-        }
-
-        private class ParameterReplacer : ExpressionVisitor
-        {
-            private readonly Type _source = default!;
-            private readonly Type _target = default!;
-            private ReadOnlyCollection<ParameterExpression> _parameters = default!;
-
-            public ParameterReplacer(Type source, Type target)
-            {
-                _source = source;
-                _target = target;
-            }
-
-            protected override Expression VisitParameter(ParameterExpression node)
-            {
-                return _parameters?.FirstOrDefault(p => p.Name == node.Name) ??
-                       (node.Type == _source ? Expression.Parameter(_target, node.Name) : node);
-            }
-
-            protected override Expression VisitLambda<T>(Expression<T> node)
-            {
-                _parameters = VisitAndConvert(node.Parameters, nameof(VisitLambda));
-                return Expression.Lambda(Visit(node.Body), _parameters);
-            }
-
-            protected override Expression VisitMember(MemberExpression node)
-            {
-                if (node == null)
-                {
-                    throw new ArgumentNullException(nameof(node));
-                }
-
-                if (node.Member.DeclaringType == _source)
-                {
-                    var expression = Visit(node?.Expression);
-
-                    if (expression != null)
-                    {
-                        Expression.Property(expression, node!.Member.Name);
-                    }
-                }
-
-                return base.VisitMember(node!);
-            }
         }
     }
 }
