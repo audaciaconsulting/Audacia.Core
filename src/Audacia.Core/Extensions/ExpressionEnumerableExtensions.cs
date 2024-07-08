@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Audacia.Core.Extensions
@@ -17,7 +18,7 @@ namespace Audacia.Core.Extensions
         /// <returns>A combined expression representing the OR logic of all input expressions.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="expressions"/> is null.</exception>
         public static Expression<Func<T, bool>> Any<T>(
-            this List<Expression<Func<T, bool>>> expressions)
+            this IEnumerable<Expression<Func<T, bool>>> expressions)
             where T : class
         {
             if (expressions == null)
@@ -25,19 +26,7 @@ namespace Audacia.Core.Extensions
                 throw new ArgumentNullException(nameof(expressions));
             }
 
-            if (expressions.Count == 1)
-            {
-                return expressions[0];
-            }
-
-            var orExpression = expressions[0];
-
-            for (int i = 1; i < expressions.Count; i++)
-            {
-                orExpression = orExpression.Or(expressions[i]);
-            }
-
-            return orExpression;
+            return expressions.Aggregate((left, right) => left.Or(right));
         }
 
         /// <summary>
@@ -48,7 +37,7 @@ namespace Audacia.Core.Extensions
         /// <returns>A combined expression representing the OR logic of all input expressions.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="expressions"/> is null.</exception>
         public static Expression<Func<T, bool>> All<T>(
-            this List<Expression<Func<T, bool>>> expressions)
+            this IEnumerable<Expression<Func<T, bool>>> expressions)
             where T : class
         {
             if (expressions == null)
@@ -56,19 +45,7 @@ namespace Audacia.Core.Extensions
                 throw new ArgumentNullException(nameof(expressions));
             }
 
-            if (expressions.Count == 1)
-            {
-                return expressions[0];
-            }
-
-            var orExpression = expressions[0];
-
-            for (int i = 1; i < expressions.Count; i++)
-            {
-                orExpression = orExpression.And(expressions[i]);
-            }
-
-            return orExpression;
+            return expressions.Aggregate((left, right) => left.And(right));
         }
     }
 }

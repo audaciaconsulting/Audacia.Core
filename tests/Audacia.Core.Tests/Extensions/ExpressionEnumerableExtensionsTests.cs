@@ -52,6 +52,36 @@ namespace Audacia.Core.Tests.Extensions
             result.Should().Be(expectedResult);
         }
 
+        [Fact]
+        public void All_handles_only_one_expression()
+        {
+            var expressions = new List<Expression<Func<ExamplePoco, bool>>>
+            {
+                e => e.Id == 1
+            };
+            var target = new ExamplePoco { Id = 1 };
+
+            var sut = expressions.All();
+            var result = sut.Compile().Invoke(target);
+
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Any_handles_only_one_expression()
+        {
+            var expressions = new List<Expression<Func<ExamplePoco, bool>>>
+            {
+                e => e.Id == 1
+            };
+            var target = new ExamplePoco { Id = 1 };
+
+            var sut = expressions.Any();
+            var result = sut.Compile().Invoke(target);
+
+            result.Should().BeTrue();
+        }
+
         private class ExamplePoco
         {
             public int Id { get; set; }
