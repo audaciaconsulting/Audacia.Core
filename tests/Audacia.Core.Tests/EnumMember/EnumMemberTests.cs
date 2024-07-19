@@ -92,7 +92,7 @@ namespace Audacia.Core.Tests.EnumMember
         }
 
         [Fact]
-        public static void Check_that_overflow_exception_is_correcrtly_called()
+        public static void Check_that_overflow_exception_is_correctly_called()
         {
             //Arrange 
             var value = "100";

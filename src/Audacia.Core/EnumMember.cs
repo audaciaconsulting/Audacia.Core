@@ -296,7 +296,7 @@ namespace Audacia.Core
         /// <param name="enumValue">Return value of the enum if parsed.</param>
         /// <returns>The parsed enum.</returns>
         /// <exception cref="OverflowException"> Throws when the enum member is out of range.</exception>
-        public static bool TryParseEnumAsString(Type type, string value, out object? enumValue)
+        private static bool TryParseEnumAsString(Type type, string value, out object? enumValue)
         {
             bool enumDefined;
 
@@ -312,6 +312,10 @@ namespace Audacia.Core
                 enumValue = null;
                 enumDefined = false;
             }
+            
+            /*When an enum isnt defined, but still has a value, this is an error state and due to backwards
+            //compatability reasons (see unit test Check_that_overflow_exception_is_correctly_called()) an exception is
+            thrown*/
             
             if (!enumDefined && enumValue != null)
             {
