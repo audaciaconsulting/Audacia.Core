@@ -264,8 +264,11 @@ namespace Audacia.Core
 
             value = SanitizeDisplayNameString(value) ?? string.Empty;
             ValidateValueString(value);
-
-            object? enumValue = GetEnumValue(enumType, value);
+            
+            if (TryParseEnumAsString(enumType, value, out var enumValue))
+            {
+                return enumValue;
+            }
 
             // Get an enumerable of enum options
             var fields = enumType.GetFields().Where(f => f.IsStatic);
@@ -283,6 +286,43 @@ namespace Audacia.Core
             }
 
             throw new ArgumentException($"Requested value '{value}' was not found.");
+        }
+
+        /// <summary>
+        /// Attempts to parse the enum as a string and return the relevant member.
+        /// </summary>
+        /// <param name="type">Type of Enum.</param>
+        /// <param name="value">Value to convert.</param>
+        /// <param name="enumValue">Return value of the enum if parsed.</param>
+        /// <returns>The parsed enum.</returns>
+        /// <exception cref="OverflowException"> Throws when the enum member is out of range.</exception>
+        private static bool TryParseEnumAsString(Type type, string value, out object? enumValue)
+        {
+            bool enumDefined;
+
+            try
+            {
+                // Match by number value or field name
+                enumValue = Enum.Parse(type, value, ignoreCase: true);
+                enumDefined = Enum.IsDefined(type, enumValue);
+            }
+            catch (ArgumentException)
+            {
+                // Ignore enum value not found error
+                enumValue = null;
+                enumDefined = false;
+            }
+            
+            /*When an enum isnt defined, but still has a value, this is an error state and due to backwards
+            //compatability reasons (see unit test Check_that_overflow_exception_is_correctly_called()) an exception is
+            thrown*/
+            
+            if (!enumDefined && enumValue != null)
+            {
+                throw new OverflowException($"Value '{value}' is outside the range of '{(type == null ? "the provided enum type" : type.Name)}'.");
+            }
+
+            return enumDefined;
         }
 
         /// <summary>
@@ -437,33 +477,6 @@ namespace Audacia.Core
             {
                 throw new ArgumentException("Value cannot be empty or whitespace.", nameof(value));
             }
-        }
-
-        private static object? GetEnumValue(Type enumType, string? value)
-        {
-            bool enumDefined;
-            object? enumValue;
-
-            try
-            {
-                // Match by number value or field name
-                enumValue = Enum.Parse(enumType, value ?? string.Empty, ignoreCase: true);
-                enumDefined = Enum.IsDefined(enumType, enumValue);
-            }
-            catch (ArgumentException)
-            {
-                // Ignore enum value not found error
-                enumValue = null;
-                enumDefined = false;
-            }
-
-            if (!enumDefined && enumValue != null)
-            {
-                throw new OverflowException($"Value '{value}' is outside the range of '{enumType.Name}'.");
-            }
-
-            // Enum was parsed successfully, and is in defined on the enum type
-            return enumValue;
         }
     }
 }

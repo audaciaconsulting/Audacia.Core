@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 using Audacia.Core;
 using FluentAssertions;
@@ -91,7 +92,7 @@ namespace Audacia.Core.Tests.EnumMember
         }
 
         [Fact]
-        public static void Check_that_overflow_exception_is_correcrtly_called()
+        public static void Check_that_overflow_exception_is_correctly_called()
         {
             //Arrange 
             var value = "100";
@@ -114,6 +115,43 @@ namespace Audacia.Core.Tests.EnumMember
 
             //Assert
             Assert.Equal("Requested value 'March' was not found.", exception.Message);
+        }
+        
+        [Fact]
+        public static void Check_that_string_enum_value_gives_correct_member()
+        {
+            //Arrange 
+            var expected = new Day[]
+            {
+                Day.Wednesday,
+                Day.Tuesday,
+                Day.Thursday
+            };
+            
+            var stringMembers = new string[]
+            {
+                "3",
+                "2",
+                "4"
+            };
+
+            var actual = new List<Day>();
+            var dayType = typeof(Day);
+            //Act
+            foreach (var day in stringMembers)
+            {
+                Day result = default(Day);
+                if (Core.EnumMember.TryParse(dayType, day, out var enumValue))
+                {
+                    result = (Day)enumValue;
+                    Debug.Assert(enumValue != null, nameof(enumValue) + " != null");
+                } 
+                
+                actual.Add(result);
+            }
+            
+            //Assert
+            Assert.Equal(expected, actual.ToArray());
         }
     }
 }
