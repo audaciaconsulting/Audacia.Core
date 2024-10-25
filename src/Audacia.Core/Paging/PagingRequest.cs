@@ -28,7 +28,7 @@
         /// <summary>
         /// Gets or sets the number of results we'll show per page.
         /// </summary>
-        public int PageSize { get; set; } = int.MaxValue;
+        public int? PageSize { get; set; }
 
         /// <summary>
         /// Gets or sets which page of results to return. Pages start at 1.
