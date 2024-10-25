@@ -3,7 +3,7 @@
     /// <summary>
     /// Request to apply paging to a list of results.
     /// </summary>
-    public class PagingRequest
+    public record PagingRequest
     {
         /// <summary>
         /// Request to apply paging to a list of results with default values.
@@ -33,6 +33,6 @@
         /// <summary>
         /// Gets or sets which page of results to return. Pages start at 1.
         /// </summary>
-        public int PageNumber { get; set; }
+        public int PageNumber { get; set; } = 0;
     }
 }

@@ -14,7 +14,7 @@ namespace Audacia.Core.Tests.Paging
         }
 
         [Fact]
-        public void Total_count_populated_based_on_result_count()
+        public void TotalCountPopulatedBasedOnResultCount()
         {
             var dataCount = new Random().Next(100);
             const int pageSize = 10;
@@ -29,7 +29,7 @@ namespace Audacia.Core.Tests.Paging
         }
 
         [Fact]
-        public void Number_of_pages_is_rounded_up_when_partial_page_is_filled()
+        public void NumberOfPagesIsRoundedUpWhenPartialPageIsFilled()
         {
             const int dataCount = 11;
             const int pageSize = dataCount - 1;
@@ -44,7 +44,7 @@ namespace Audacia.Core.Tests.Paging
         }
 
         [Fact]
-        public void Results_skipped_if_page_number_is_greater_than_one()
+        public void ResultsSkippedIfPageNumberIsGreaterThanOne()
         {
             const int pageSize = 1;
             const int pageNumber = 2;
@@ -64,7 +64,7 @@ namespace Audacia.Core.Tests.Paging
         }
 
         [Fact]
-        public void All_results_returned_if_no_page_size_specified()
+        public void AllResultsReturnedIfNoPageSizeSpecified()
         {
             var dataCount = new Random().Next(100);
             var pagingRequest = new PagingRequest();
@@ -78,7 +78,7 @@ namespace Audacia.Core.Tests.Paging
         }
 
         [Fact]
-        public void Sorts_results_before_applying_paging()
+        public void SortsResultsBeforeApplyingPaging()
         {
             const int pageSize = 1;
             const int pageNumber = 2;
@@ -90,10 +90,10 @@ namespace Audacia.Core.Tests.Paging
             var expectedExcludedRow = new ExampleDto { SortColumn = "A" };
             var query = new List<ExampleDto>
             {
-                new ExampleDto{ SortColumn = "C"},
-                new ExampleDto{ SortColumn = "D"},
+                new ExampleDto { SortColumn = "C" },
+                new ExampleDto { SortColumn = "D" },
                 expectedExcludedRow,
-                new ExampleDto { SortColumn = "B"},
+                new ExampleDto { SortColumn = "B" }
             };
 
             var page = new Page<ExampleDto>(query, pagingRequest);
@@ -102,7 +102,7 @@ namespace Audacia.Core.Tests.Paging
         }
 
         [Fact]
-        public void Throws_exception_when_invalid_sort_property_provided()
+        public void ThrowsExceptionWhenInvalidSortPropertyProvided()
         {
             const int pageSize = 1;
             var pagingRequest = new SortablePagingRequest(pageSize)

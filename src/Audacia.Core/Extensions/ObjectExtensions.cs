@@ -15,11 +15,11 @@ namespace Audacia.Core.Extensions
         /// <param name="obj">The object to convert.</param>
         /// <returns>Dictionary with key = property name, value = value.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Member Design", "AV1130:Return type in method signature should be an interface to an unchangeable collection", Justification = "Type is limited to dictionaries.")]
-        public static IDictionary<string, object> ToPropertyDictionary(this object obj)
+        public static IDictionary<string, object?> ToPropertyDictionary(this object obj)
         {
             if (obj == null)
             {
-                return new Dictionary<string, object>();
+                return new Dictionary<string, object?>();
             }
 
             return

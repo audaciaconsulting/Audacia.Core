@@ -3,7 +3,7 @@
     /// <summary>
     /// Request to sort, and apply paging to a list of results.
     /// </summary>
-    public class SortablePagingRequest : PagingRequest
+    public record SortablePagingRequest : PagingRequest
     {
         /// <summary>
         /// Initializes a new instance of <see cref="SortablePagingRequest"/>.

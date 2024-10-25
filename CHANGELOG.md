@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0 - 2024-10-24
+### Changed
+- Updated target framework to .NET8
+- Minor adjustments to support .NET8
+- Changed `PagingRequest` and `SortablePagingRequest` to records
+
 ## 1.2.2 - 2024-09-05
 ### Added
 - Added CHANGELOG.md
