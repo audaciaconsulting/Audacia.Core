@@ -1,6 +1,6 @@
 ﻿namespace Audacia.Core
 {
-/// <summary>
+    /// <summary>
     /// Request to sort, and apply paging to a list of results.
     /// </summary>
     public record SortablePagingRequest : PagingRequest
