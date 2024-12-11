@@ -50,13 +50,7 @@ namespace Audacia.Core.Extensions
         /// <summary>
         /// Combines the first predicate with the second using the logical "and".
         /// </summary>
-        /// <param name="first">The source expression.</param>
-        /// <param name="second">The expression to join on to <paramref name="first" />.</param>
-        /// <returns>An expression combining <paramref name="first" /> and <paramref name="second" />.</returns>
-        public static LambdaExpression And(
-            this LambdaExpression first,
-            LambdaExpression second)
-        {
+        ///
             return first.Compose(second, Expression.AndAlso);
         }
 
