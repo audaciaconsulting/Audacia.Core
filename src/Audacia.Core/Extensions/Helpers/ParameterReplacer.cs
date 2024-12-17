@@ -36,7 +36,8 @@ namespace Audacia.Core.Extensions.Helpers
         protected override Expression VisitLambda<T>(Expression<T> node)
         {
             _parameters = VisitAndConvert(node.Parameters, nameof(VisitLambda));
-            return Expression.Lambda(Visit(node.Body), _parameters);
+            var nodeParameters = _parameters;
+            return Expression.Lambda(Visit(node.Body), nodeParameters);
         }
 
         /// <inheritdoc />
@@ -53,7 +54,7 @@ namespace Audacia.Core.Extensions.Helpers
 
                 if (expression != null)
                 {
-                    Expression.Property(expression, node!.Member.Name);
+                    return Expression.Property(expression, node!.Member.Name);
                 }
             }
 
