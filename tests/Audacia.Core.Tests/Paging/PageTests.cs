@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using Xunit;
@@ -10,6 +11,8 @@ namespace Audacia.Core.Tests.Paging
     {
         private record ExampleDto
         {
+            public int Id { get; set; } = 0;
+
             public string SortColumn { get; set; }
         }
 
@@ -52,9 +55,9 @@ namespace Audacia.Core.Tests.Paging
             var query = new List<ExampleDto>
             {
                 expectedExcludedRow,
-                new ExampleDto(),
-                new ExampleDto(),
-                new ExampleDto()
+                new ExampleDto() { Id = 1 },
+                new ExampleDto() { Id = 2 },
+                new ExampleDto() { Id = 3 }
             };
             var pagingRequest = new PagingRequest(pageSize, pageNumber);
 
