@@ -29,11 +29,11 @@ namespace Audacia.Core.Extensions.Helpers
         }
 
         /// <inheritdoc />
-        protected override Expression VisitParameter(ParameterExpression p)
+        protected override Expression VisitParameter(ParameterExpression expression)
         {
-            return _map.TryGetValue(p, out var replacement)
+            return _map.TryGetValue(expression, out var replacement)
                 ? replacement
-                : base.VisitParameter(p);
+                : base.VisitParameter(expression);
         }
     }
 }

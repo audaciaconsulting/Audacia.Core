@@ -8,7 +8,7 @@ namespace Audacia.Core.Tests.Paging
 {
     public class PageTests
     {
-        private class ExampleDto
+        private record ExampleDto
         {
             public string SortColumn { get; set; }
         }

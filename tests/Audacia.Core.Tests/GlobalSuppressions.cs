@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Maintainability", "ACL1010:Nullable reference types are not enabled", Justification = "<Pending>")]
+[assembly: SuppressMessage("Maintainability", "AV1564:Avoid signatures that take a `bool` parameter", Justification = "Useful for providing InlineData for tests")]
