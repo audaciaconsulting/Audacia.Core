@@ -14,7 +14,7 @@ namespace Audacia.Core.Tests.Extensions
         [InlineData(2, false)]
         [InlineData(-1, false)]
         [InlineData(12974, false)]
-        public void All_returns_false_if_any_expressions_are_false(int idValue, bool expectedResult)
+        public void All_returns_false_if_any_expressions_are_false(int id, bool expectedResult)
         {
             var expressions = new List<Expression<Func<ExamplePoco, bool>>>
             {
@@ -22,7 +22,7 @@ namespace Audacia.Core.Tests.Extensions
                 e => e.Id > 0,
                 e => e.Id != 12974
             };
-            var target = new ExamplePoco { Id = idValue };
+            var target = new ExamplePoco { Id = id };
 
             var sut = expressions.All();
             var result = sut.Compile().Invoke(target);
@@ -36,7 +36,7 @@ namespace Audacia.Core.Tests.Extensions
         [InlineData(2, true)]
         [InlineData(-1, false)]
         [InlineData(63245, true)]
-        public void Any_returns_false_if_all_expressions_are_false(int idValue, bool expectedResult)
+        public void Any_returns_false_if_all_expressions_are_false(int id, bool expectedResult)
         {
             var expressions = new List<Expression<Func<ExamplePoco, bool>>>
             {
@@ -44,7 +44,7 @@ namespace Audacia.Core.Tests.Extensions
                 e => e.Id == 1,
                 e => e.Id > 1
             };
-            var target = new ExamplePoco { Id = idValue };
+            var target = new ExamplePoco { Id = id };
 
             var sut = expressions.Any();
             var result = sut.Compile().Invoke(target);

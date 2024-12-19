@@ -17,7 +17,7 @@
         <None Include="package-icon.png" Pack="true" PackagePath="" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Audacia.CodeAnalysis" Version="1.5.1">
+        <PackageReference Include="Audacia.CodeAnalysis" Version="1.11.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

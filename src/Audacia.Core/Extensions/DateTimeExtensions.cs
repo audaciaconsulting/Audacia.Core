@@ -16,9 +16,10 @@ namespace Audacia.Core.Extensions
         /// <returns>The suffix string.</returns>
         public static string TwoLetterSuffix(this DateTime date)
         {
+            const int maxModNotEndingWithTh = 3;
             var dayModTen = date.Day % 10;
 
-            if (dayModTen > 3 || date.Day >= 10 && date.Day <= 19 || dayModTen == 0)
+            if (dayModTen > maxModNotEndingWithTh || date.Day is >= 10 and <= 19 || dayModTen == 0)
             {
                 return "th";
             }
