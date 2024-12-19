@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.0.1 - 2024-12-19
+### Fixed
+- Addressed issue where `ConvertGenericTypeArgument` would fail to compile expressions with nested lambdas.
+
+### Changed
+- Updated .editorconfig files.
+- Enabled `WarningsAsErrors` for `Audacia.Core.Tests` project.
+- Updated to version 1.11.0 of `Audacia.CodeAnalysis` library.
+
 ## 2.0.0 - 2024-10-24
 ### Changed
 - Updated target framework to .NET8
