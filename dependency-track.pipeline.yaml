@@ -73,6 +73,8 @@ stages:
               dotnetProjects: |
                 $(audaciaCoreProjectPath)
                 $(audaciaCoreTestsProjectPath)
+              vstsFeed: 'Audacia.Public/AudaciaPublic'
+              publishArtifact: true
               artifactName: $(artifactName)
 
   # =========================
