@@ -48,8 +48,6 @@ variables:
   - name: audaciaCoreTestsProjectPath
     value: $(System.DefaultWorkingDirectory)/tests/Audacia.Core.Tests/Audacia.Core.Tests.csproj
 
-  - name: nodeVersion
-    value: '22.x'
   - name: artifactName
     value: 'sbom-files'
   - name: publishArtifact
