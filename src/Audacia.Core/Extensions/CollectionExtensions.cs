@@ -82,7 +82,7 @@ public static class CollectionExtensions
 
         foreach (var item in source)
         {
-            _ = destination.Remove(item);
+            destination.Remove(item);
         }
     }
 }

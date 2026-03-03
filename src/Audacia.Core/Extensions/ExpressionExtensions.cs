@@ -64,13 +64,14 @@ public static class ExpressionExtensions
     [SuppressMessage(
         "Style",
         "IDE0060:Remove unused parameter",
-        Justification = "Same as RCS1175 justification")]
+        Justification = "Same as RCS1175 justification.")]
     public static PropertyInfo? GetPropertyInfo<T>(this T obj, Expression<Func<T, object>> propertyExpression)
     {
         //Overloaded so allow object specific property access and allow implicit type argument
         return GetPropertyInfo(propertyExpression);
     }
 
+    [SuppressMessage("Style", "IDE0010:Add missing cases", Justification = "All other ExpressionType values can safely be covered by default.")]
     private static MemberExpression ExtractMemberExpression(Expression expression)
     {
         // ReSharper disable once SwitchStatementMissingSomeCases

@@ -19,13 +19,11 @@ public static class DateTimeExtensions
         const int maxModNotEndingWithTh = 3;
         var dayModTen = date.Day % 10;
 
-        return dayModTen > maxModNotEndingWithTh || date.Day is >= 10 and <= 19 || dayModTen == 0
-            ? "th"
-            : GetFirstThreeDaysSuffix(dayModTen);
-    }
+        if (dayModTen > maxModNotEndingWithTh || date.Day is >= 10 and <= 19 || dayModTen == 0)
+        {
+            return "th";
+        }
 
-    private static string GetFirstThreeDaysSuffix(int dayModTen)
-    {
         return dayModTen switch
         {
             1 => "st",

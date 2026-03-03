@@ -1,0 +1,21 @@
+
+# All files
+[*]
+indent_style = space
+
+# Xml files
+
+# AV1715: Name of public or internal boolean identifier should start with a verb
+dotnet_diagnostic.AV1715.severity = none
+
+# ACL1017: Parameter in public or internal member is of type bool or bool?
+dotnet_diagnostic.ACL1017.severity = none
+
+# IDE0320: Make anonymous function static
+dotnet_diagnostic.IDE0320.severity = none
+
+# ACL1004: Identifier contains an abbreviation or is too short
+dotnet_diagnostic.ACL1004.severity = none
+
+[*.xml]
+indent_size = 2

@@ -25,14 +25,7 @@ public static class QueryableExtensions
         "Member Design",
         "AV1130:Return type in method signature should be an interface to an unchangeable collection",
         Justification = "Extends and returns IQueryable for chaining.")]
-    [SuppressMessage(
-        "Maintainability",
-        "AV1564:Parameter in public or internal member is of type bool or bool?",
-        Justification = "Easy to understand and implement.")]
-    public static IOrderedQueryable<T> AppendOrderBy<T, TKey>(
-        this IQueryable<T> query,
-        Expression<Func<T, TKey>> keySelector,
-        bool descending)
+    public static IOrderedQueryable<T> AppendOrderBy<T, TKey>(this IQueryable<T> query, Expression<Func<T, TKey>> keySelector, bool descending)
         => (query?.Expression.Type ?? throw new ArgumentNullException(nameof(query), "Query can not be null")) == typeof(IOrderedQueryable<T>)
                 ? ((IOrderedQueryable<T>)query).ThenBy(keySelector, descending)
                 : query.OrderBy(keySelector, descending);
@@ -50,14 +43,7 @@ public static class QueryableExtensions
         "Member Design",
         "AV1130:Return type in method signature should be an interface to an unchangeable collection",
         Justification = "Returns IOrderedQueryable for chaining.")]
-    [SuppressMessage(
-        "Maintainability",
-        "AV1564:Parameter in public or internal member is of type bool or bool?",
-        Justification = "Easy to understand and implement.")]
-    public static IOrderedQueryable<T> OrderBy<T, TKey>(
-        this IQueryable<T> query,
-        Expression<Func<T, TKey>> keySelector,
-        bool descending)
+    public static IOrderedQueryable<T> OrderBy<T, TKey>(this IQueryable<T> query, Expression<Func<T, TKey>> keySelector, bool descending)
         => descending
             ? query.OrderByDescending(keySelector)
             : query.OrderBy(keySelector);
@@ -75,14 +61,7 @@ public static class QueryableExtensions
         "Member Design",
         "AV1130:Return type in method signature should be an interface to an unchangeable collection",
         Justification = "Returns IOrderedQueryable for chaining.")]
-    [SuppressMessage(
-        "Maintainability",
-        "AV1564:Parameter in public or internal member is of type bool or bool?",
-        Justification = "Easy to understand and implement.")]
-    public static IOrderedQueryable<T> ThenBy<T, TKey>(
-        this IOrderedQueryable<T> query,
-        Expression<Func<T, TKey>> keySelector,
-        bool descending)
+    public static IOrderedQueryable<T> ThenBy<T, TKey>(this IOrderedQueryable<T> query, Expression<Func<T, TKey>> keySelector, bool descending)
         => descending
             ? query.ThenByDescending(keySelector)
             : query.ThenBy(keySelector);

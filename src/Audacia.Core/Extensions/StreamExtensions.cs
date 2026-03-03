@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Audacia.Core.Extensions;
@@ -15,11 +16,7 @@ public static class StreamExtensions
     /// <param name="close">Whether to close the original stream.</param>
     /// <returns>The copied stream.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Maintainability",
-        "AV1564:Parameter in public or internal member is of type bool or bool?",
-        Justification = "Easy to understand and implement.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+    [SuppressMessage(
         "Maintainability",
         "ACL1002:Member or local function contains too many statements",
         Justification = "Easier to read and understand.")]

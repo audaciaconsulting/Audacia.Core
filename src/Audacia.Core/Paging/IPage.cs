@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure. Likely to be tech-debt following a refactor which avoided breaking changes.
 namespace Audacia.Core;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// Interface for handling the result of paging. (See <see cref="PagingRequest"/>).

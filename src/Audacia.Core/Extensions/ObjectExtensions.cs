@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Audacia.Core.Extensions;
@@ -14,15 +15,19 @@ public static class ObjectExtensions
     /// </summary>
     /// <param name="obj">The object to convert.</param>
     /// <returns>Dictionary with key = property name, value = value.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+    [SuppressMessage(
         "Member Design",
         "AV1130:Return type in method signature should be an interface to an unchangeable collection",
         Justification = "Type is limited to dictionaries.")]
     public static IDictionary<string, object?> ToPropertyDictionary(this object obj)
     {
-        return obj == null
-            ? []
-            : TypeDescriptor.GetProperties(obj.GetType())
+        if (obj == null)
+        {
+            return new Dictionary<string, object?>();
+        }
+
+        return
+            TypeDescriptor.GetProperties(obj.GetType())
                 .OfType<PropertyDescriptor>()
                 .ToDictionary(property => property.Name, property => property.GetValue(obj));
     }
