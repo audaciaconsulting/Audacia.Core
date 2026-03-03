@@ -6,3 +6,7 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Maintainability", "AV1564:Avoid signatures that take a `bool` parameter", Justification = "Useful for providing InlineData for tests")]
+[assembly: SuppressMessage(
+    "Style",
+    "IDE0058:Expression value is never used",
+    Justification = "Disables redundant assignment forcing for fluent assertion expressions")]
