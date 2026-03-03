@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.2.0 - 2026-03-03
+### Added
+- Minor suppressions for new Audacia.CodeAnalysis analysers.
+
+### Changed
+- Upgraded target framework to .NET10
+- Upgraded Audacia.CodeAnalysis framework from 1.11.0 to 1.12.1
+
 ## 2.0.1 - 2024-12-19
 ### Fixed
 - Addressed issue where `ConvertGenericTypeArgument` would fail to compile expressions with nested lambdas.
