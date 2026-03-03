@@ -86,6 +86,7 @@ public static class LambdaExpressionExtensions
         ArgumentNullException.ThrowIfNull(first);
         ArgumentNullException.ThrowIfNull(second);
         ArgumentNullException.ThrowIfNull(merge);
+
         var map = first.Parameters.Select((f, i) => new
         {
             first = (Expression)f,

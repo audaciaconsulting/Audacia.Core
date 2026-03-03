@@ -5,33 +5,30 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Audacia.Core.Extensions;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure. Likely to be tech-debt following a refactor which avoided breaking changes.
 namespace Audacia.Core;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// Specification for how we'll page a queryable of <typeparamref name="T"/>.
 /// </summary>
 /// <typeparam name="T">The return type of the query.</typeparam>
-public class PagingSpecification<T>
+/// <remarks>
+/// <para>Construct a specification for how we'll page a queryable of <typeparamref name="T"/>.</para>
+/// </remarks>
+/// <param name="query">The query to implement a specification.</param>
+public class PagingSpecification<T>(IQueryable<T> query)
 {
     /// <summary>
     /// Gets the underlying query for the data to be paged.
     /// </summary>
-    public IQueryable<T> Query { get; private set; }
+    public IQueryable<T> Query { get; private set; } = query;
 
     private int _pageNumber;
     private int _pageSize = int.MaxValue;
     private static readonly Type Type = typeof(T);
     private string _sortProperty = string.Empty;
     private bool _descending = false;
-
-    /// <summary>
-    /// Construct a specification for how we'll page a queryable of <typeparamref name="T"/>.
-    /// </summary>
-    /// <param name="query">The query to implement a specification.</param>
-    public PagingSpecification(IQueryable<T> query)
-    {
-        Query = query;
-    }
 
     /// <summary>
     /// Record paging information for use when getting the page of results.

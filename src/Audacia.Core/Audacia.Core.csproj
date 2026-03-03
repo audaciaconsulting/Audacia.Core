@@ -13,7 +13,6 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <None Include="C:\Repos\Audacia.Core\src\Audacia.Core\.editorconfig" />
         <None Include="package-icon.png" Pack="true" PackagePath="" />
     </ItemGroup>
     <ItemGroup>
@@ -22,8 +21,5 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    </ItemGroup>
-    <ItemGroup>
-        <EditorConfigFiles Remove="C:\Repos\Audacia.Core\src\Audacia.Core\.editorconfig" />
     </ItemGroup>
 </Project>

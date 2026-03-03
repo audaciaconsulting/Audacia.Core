@@ -8,22 +8,16 @@ namespace Audacia.Core.Extensions.Helpers;
 /// <summary>
 /// Expression visitor that replaces an expression parameter with another of a different type, for use in manipulating an expression.
 /// </summary>
-internal class ParameterReplacer : ExpressionVisitor
+/// <remarks>
+/// <para>Constructs a new <see cref="ParameterReplacer"/>.</para>
+/// </remarks>
+/// <param name="source">The type of the expression parameter to replace.</param>
+/// <param name="target">The destination type to replace the parameter with.</param>
+internal class ParameterReplacer(Type source, Type target) : ExpressionVisitor
 {
-    private readonly Type _source = default!;
-    private readonly Type _target = default!;
+    private readonly Type _source = source;
+    private readonly Type _target = target;
     private ReadOnlyCollection<ParameterExpression> _parameters = default!;
-
-    /// <summary>
-    /// Constructs a new <see cref="ParameterReplacer"/>.
-    /// </summary>
-    /// <param name="source">The type of the expression parameter to replace.</param>
-    /// <param name="target">The destination type to replace the parameter with.</param>
-    public ParameterReplacer(Type source, Type target)
-    {
-        _source = source;
-        _target = target;
-    }
 
     /// <inheritdoc />
     protected override Expression VisitParameter(ParameterExpression node)

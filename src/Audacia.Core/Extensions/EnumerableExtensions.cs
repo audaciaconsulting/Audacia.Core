@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Audacia.Core.Extensions;
@@ -18,8 +17,7 @@ public static class EnumerableExtensions
     /// <returns>A <see cref="IEnumerable{T}"/>, grouped by <typeparamref name="T"/>.</returns>
     public static IEnumerable<IGrouping<int, T>> GroupsOf<T>(this IEnumerable<T> enumerable, int number)
     {
-        var indexedItems = enumerable.Select((item, index) => new { item, index });
-        return [.. indexedItems.GroupBy(entry => entry.index / number, entry => entry.item).ToList()];
+        return [.. enumerable.Select((item, index) => new { item, index }).GroupBy(entry => entry.index / number, entry => entry.item).ToList()];
     }
 
     /// <summary>
@@ -29,10 +27,7 @@ public static class EnumerableExtensions
     /// <typeparam name="TValue">The group values.</typeparam>
     /// <param name="grouping">The grouped collection.</param>
     /// <returns>A dictionary, whose key is the groups key, and values are the values for that key.</returns>
-    [SuppressMessage(
-        "Member Design",
-        "AV1130:Return type in method signature should be an interface to an unchangeable collection",
-        Justification = "Limited to dictionaries.")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Member Design", "AV1130:Return type in method signature should be an interface to an unchangeable collection", Justification = "Limited to dictionaries.")]
     public static IDictionary<TKey, List<TValue>> ToDictionary<TKey, TValue>(
         this IEnumerable<IGrouping<TKey, TValue>> grouping) where TKey : notnull
     {

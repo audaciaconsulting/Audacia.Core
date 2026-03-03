@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -18,7 +19,7 @@ namespace Audacia.Core;
 /// <see cref="DescriptionAttribute"/>,
 /// <see cref="EnumMemberAttribute"/>.
 /// </summary>
-[System.Diagnostics.CodeAnalysis.SuppressMessage(
+[SuppressMessage(
     "Naming",
     "AV1710:Member name includes the name of its containing type",
     Justification = "This helper class includes its own name in a number of it's members, this is reference to the 'EnumMemberAttribute' as is chose to clearly indicate the source of the value.")]
@@ -136,7 +137,7 @@ public static class EnumMember
     /// <returns>The description string.</returns>
     /// <returns>The value of <see cref="DescriptionAttribute"/> from the provided <paramref name="enumValue"/>.</returns>
     /// <exception cref="ArgumentNullException">enumType or value is null.</exception>
-    public static string? GetDescription(object enumValue)
+    private static string? GetDescription(object enumValue)
     {
         if (enumValue == null)
         {
@@ -145,7 +146,7 @@ public static class EnumMember
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
-        _ = ValidateEnumType(enumType);
+        ValidateEnumType(enumType);
 
         return GetFieldInfo(enumValue)
             ?.GetCustomAttribute<DescriptionAttribute>(false)
@@ -168,7 +169,7 @@ public static class EnumMember
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
-        _ = ValidateEnumType(enumType);
+        ValidateEnumType(enumType);
 
         return GetFieldInfo(enumValue)
             ?.GetCustomAttribute<EnumMemberAttribute>(false)
@@ -190,7 +191,7 @@ public static class EnumMember
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
-        _ = ValidateEnumType(enumType);
+        ValidateEnumType(enumType);
 
         return GetFieldInfo(enumValue)?.Name;
     }
@@ -223,7 +224,7 @@ public static class EnumMember
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
-        _ = ValidateEnumType(enumType);
+        ValidateEnumType(enumType);
 
         return Convert.ToInt32(enumValue, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture);
     }
@@ -241,7 +242,7 @@ public static class EnumMember
     /// </exception>
     /// <exception cref="OverflowException">value is outside the range of the underlying type of enumType.</exception>
     /// <returns>The enum value as an object.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "AV1551:Method overload should call another overload", Justification = "Method calls Parse(Type enumType, string value)")]
+    [SuppressMessage("Maintainability", "AV1551:Method overload should call another overload", Justification = "Method calls Parse(Type enumType, string value)")]
     public static TEnum? Parse<TEnum>(string value) where TEnum : struct
     {
         return (TEnum?)Parse(typeof(TEnum?), value ?? string.Empty);
@@ -271,11 +272,8 @@ public static class EnumMember
             return enumValue;
         }
 
-        // Get an enumerable of enum options
-        var fields = enumType.GetFields().Where(f => f.IsStatic);
-
-        // Attempt to match to each possible display value
-        foreach (var field in fields)
+        // Enumerate each enum field info, attempt to match each possible display value.
+        foreach (var field in enumType.GetFields().Where(f => f.IsStatic))
         {
             if (MatchesEnumMember(field, value) ||
                 MatchesDescription(field, value) ||
@@ -319,9 +317,12 @@ public static class EnumMember
         * compatability reasons (see unit test Check_that_overflow_exception_is_correctly_called()) an exception is
         * thrown.
         */
-        return !enumDefined && enumValue != null
-            ? throw new OverflowException($"Value '{value}' is outside the range of '{(type == null ? "the provided enum type" : type.Name)}'.")
-            : enumDefined;
+        if (!enumDefined && enumValue != null)
+        {
+            throw new OverflowException($"Value '{value}' is outside the range of '{(type == null ? "the provided enum type" : type.Name)}'.");
+        }
+
+        return enumDefined;
     }
 
     /// <summary>
@@ -331,7 +332,7 @@ public static class EnumMember
     /// <param name="value">Input value.</param>
     /// <param name="enumValue">The enum value as an object.</param>
     /// <returns><see langword="true" /> if parsed successfully.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Matters more if there *is* an error more than *what* error.")]
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Matters more if there *is* an error more than *what* error.")]
     public static bool TryParse(Type enumType, string value, out object? enumValue)
     {
         try
@@ -354,7 +355,7 @@ public static class EnumMember
     /// <param name="value">Input value.</param>
     /// <param name="enumValue">The enum value as an object.</param>
     /// <returns><see langword="true" /> if parsed successfully.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "AV1551:Method overload should call another overload", Justification = "Method calls TryParse(Type enumType, string value, out object? enumValue)")]
+    [SuppressMessage("Maintainability", "AV1551:Method overload should call another overload", Justification = "Method calls TryParse(Type enumType, string value, out object? enumValue)")]
     public static bool TryParse<TEnum>(string value, out TEnum? enumValue) where TEnum : struct
     {
         if (TryParse(typeof(TEnum), value, out var enumObj))
@@ -384,11 +385,11 @@ public static class EnumMember
     /// </summary>
     /// <typeparam name="TEnum">Enum type.</typeparam>
     /// <returns>An array of enum values.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "AV1551:Method overload should call another overload", Justification = "Other 'overload' method has different return type.")]
+    [SuppressMessage("Maintainability", "AV1551:Method overload should call another overload", Justification = "Other 'overload' method has different return type.")]
     public static IEnumerable<TEnum> Values<TEnum>() where TEnum : struct
     {
         var enumType = typeof(TEnum);
-        _ = ValidateEnumType(enumType);
+        ValidateEnumType(enumType);
 
         return (TEnum[])Enum.GetValues(typeof(TEnum));
     }

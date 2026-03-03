@@ -17,7 +17,8 @@ public static class AssemblyExtensions
     /// <param name="assembly">The source assembly.</param>
     /// <returns>A collection of <typeparamref name="TFilterType"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="assembly"/> is null.</exception>
-    public static IEnumerable<TFilterType> GetNewInstancesOfInheritingTypesWithParameterlessConstructors<TFilterType>(this Assembly assembly) where TFilterType : class
+    public static IEnumerable<TFilterType> GetNewInstancesOfInheritingTypesWithParameterlessConstructors<TFilterType>(
+        this Assembly assembly) where TFilterType : class
     {
         if (assembly == null)
         {

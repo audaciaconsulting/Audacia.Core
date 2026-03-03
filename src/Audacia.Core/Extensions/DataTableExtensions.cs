@@ -27,7 +27,7 @@ public static class DataTableExtensions
 
         var headers = GetHeaders(dataTable);
 
-        _ = outputBuilder.AppendJoin(delimiter, headers).AppendLine();
+        outputBuilder.AppendJoin(delimiter, headers).AppendLine();
 
         return GetRows(dataTable, delimiter, outputBuilder);
     }
@@ -54,7 +54,7 @@ public static class DataTableExtensions
 
             header = header.Replace("\"", "\"\"", StringComparison.InvariantCulture);
 
-            _ = headers.Add($"\"{header}\"");
+            headers.Add($"\"{header}\"");
         }
 
         return headers;
@@ -77,7 +77,7 @@ public static class DataTableExtensions
                 cells[i] = $"\"{cellValueString}\"";
             }
 
-            _ = outputBuilder.AppendJoin(delimiter, cells).AppendLine();
+            outputBuilder.AppendJoin(delimiter, cells).AppendLine();
         }
 
         return outputBuilder.ToString().TrimEnd(Environment.NewLine.ToCharArray());

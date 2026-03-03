@@ -21,7 +21,10 @@ public static class ExpressionEnumerableExtensions
         this IEnumerable<Expression<Func<T, bool>>> expressions)
         where T : class
     {
-        ArgumentNullException.ThrowIfNull(expressions);
+        if (expressions == null)
+        {
+            throw new ArgumentNullException(nameof(expressions));
+        }
 
         return expressions.Aggregate((left, right) => left.Or(right));
     }
@@ -37,7 +40,10 @@ public static class ExpressionEnumerableExtensions
         this IEnumerable<Expression<Func<T, bool>>> expressions)
         where T : class
     {
-        ArgumentNullException.ThrowIfNull(expressions);
+        if (expressions == null)
+        {
+            throw new ArgumentNullException(nameof(expressions));
+        }
 
         return expressions.Aggregate((left, right) => left.And(right));
     }

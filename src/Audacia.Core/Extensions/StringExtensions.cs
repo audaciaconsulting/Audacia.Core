@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -37,7 +38,6 @@ public static class StringExtensions
     /// <param name="output">The converted result (or default if convert fails).</param>
     /// <param name="invariant">Whether to use culture invariance in the conversion.</param>
     /// <returns>Whether the conversion passed or failed.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "AV1564:Parameter in public or internal member is of type bool or bool?", Justification = "Easy to understand and implement.")]
     public static bool TryConvertToType<T>(this string input, out T output, bool invariant = false)
     {
         try
@@ -71,7 +71,6 @@ public static class StringExtensions
     /// <returns>The converted string.</returns>
     /// <exception cref="NotSupportedException">If cannot convert from input.</exception>
     /// <exception cref="ArgumentNullException">enumType or value is null.</exception>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "AV1564:Parameter in public or internal member is of type bool or bool?", Justification = "Easy to understand and implement.")]
     public static T ConvertToType<T>(this string input, bool invariant = false)
     {
         if (input == null)
@@ -92,7 +91,7 @@ public static class StringExtensions
     /// <param name="source">The source string.</param>
     /// <param name="findReplace">The find and replace pairs.</param>
     /// <returns>The resultant string.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+    [SuppressMessage(
         "Member Design",
         "AV1115:Member or local function contains the word 'and', which suggests doing multiple things",
         Justification = "Makes sense that it does two things, for ease of use.")]
@@ -107,7 +106,7 @@ public static class StringExtensions
 
         foreach (var item in findReplace)
         {
-            _ = stringBuilder.Replace(item.Key, item.Value);
+            stringBuilder.Replace(item.Key, item.Value);
         }
 
         return stringBuilder.ToString();
@@ -212,9 +211,12 @@ public static class StringExtensions
     /// <returns>Returns <paramref name="source"/> limited to <paramref name="characterLimit"/>.</returns>
     public static string Truncate(this string source, int characterLimit, string appendStringIfLimitExceeded = "...")
     {
-        return string.IsNullOrEmpty(source) || source.Length <= characterLimit
-            ? source
-            : source[..(characterLimit - (appendStringIfLimitExceeded ?? string.Empty).Length)].Trim() + appendStringIfLimitExceeded;
+        if (string.IsNullOrEmpty(source) || source.Length <= characterLimit)
+        {
+            return source;
+        }
+
+        return source[..(characterLimit - (appendStringIfLimitExceeded ?? string.Empty).Length)].Trim() + appendStringIfLimitExceeded;
     }
 
     /// <summary>
@@ -256,9 +258,13 @@ public static class StringExtensions
     /// <exception cref="ArgumentException">If the property doesn't exist on T.</exception>
     public static Expression<Func<T, object>> ToExpression<T>(this string propertyName)
     {
-        //Upper case first to account from lower case JSON
+        // Upper case first to account from lower case JSON
         var type = typeof(T);
-        var propertyInfo = type.GetProperty(propertyName.UpperCaseFirst()) ?? throw new ArgumentException($"Provided property name isn't a member of {typeof(T).Name}", nameof(propertyName));
+
+        // Throws if a the given property does not exist on the type.
+        var propertyInfo = type.GetProperty(propertyName.UpperCaseFirst())
+            ?? throw new ArgumentException($"Provided property name isn't a member of {typeof(T).Name}", nameof(propertyName));
+
         var parameterExpression = Expression.Parameter(type);
         var propertyExpression = Expression.PropertyOrField(parameterExpression, propertyInfo.Name);
 

@@ -16,11 +16,6 @@ public static class TypeExtensions
         TypeCode.Byte,
         TypeCode.SByte,
         TypeCode.UInt16,
-        TypeCode.UInt32,
-        TypeCode.UInt64,
-        TypeCode.Int16,
-        TypeCode.Int32,
-        TypeCode.Int64,
         TypeCode.Decimal,
         TypeCode.Double,
         TypeCode.Single
@@ -34,7 +29,11 @@ public static class TypeExtensions
     /// <returns>If the type is nullable.</returns>
     public static bool IsNullable(this Type @this)
     {
-        ArgumentNullException.ThrowIfNull(@this);
+        if (@this == null)
+        {
+            throw new ArgumentNullException(nameof(@this));
+        }
+
         return !@this.IsValueType || (@this.IsGenericType && @this.GetGenericTypeDefinition() == typeof(Nullable<>));
     }
 
@@ -46,13 +45,17 @@ public static class TypeExtensions
     /// <exception cref="ArgumentNullException"><paramref name="this"/> is null.</exception>
     public static Type GetUnderlyingTypeIfNullable(this Type @this)
     {
-        ArgumentNullException.ThrowIfNull(@this);
+        if (@this == null)
+        {
+            throw new ArgumentNullException(nameof(@this));
+        }
 
-        return @this.IsNullable()
-            ? !@this.IsValueType
-                ? @this
-                : Nullable.GetUnderlyingType(@this)!
-            : @this;
+        if (@this.IsNullable())
+        {
+            return !@this.IsValueType ? @this : Nullable.GetUnderlyingType(@this)!;
+        }
+
+        return @this;
     }
 
     /// <summary>
