@@ -26,11 +26,7 @@ public static class ExpressionExtensions
         Justification = "This is called from another overload.")]
     public static PropertyInfo? GetPropertyInfo(Expression propertyExpression)
     {
-        if (propertyExpression == null)
-        {
-            throw new ArgumentNullException(nameof(propertyExpression));
-        }
-
+        ArgumentNullException.ThrowIfNull(propertyExpression);
         if (propertyExpression.NodeType != ExpressionType.Lambda)
         {
             throw new ArgumentException("Selector must be lambda expression", nameof(propertyExpression));
@@ -133,8 +129,8 @@ public static class ExpressionExtensions
     /// <exception cref="ArgumentNullException"><paramref name="expression"/> is null.</exception>
     public static TResult Execute<T, TResult>(this Expression<Func<T, TResult>> expression, T arg)
     {
-        return (expression ?? throw new ArgumentNullException(nameof(expression), "Expression cannot be null"))
-            .Compile()(arg);
+        ArgumentNullException.ThrowIfNull(expression);
+        return expression.Compile()(arg);
     }
 
     /// <summary>
@@ -146,8 +142,8 @@ public static class ExpressionExtensions
     /// <exception cref="ArgumentNullException"><paramref name="expression"/> is null.</exception>
     public static void Perform<T>(this Expression<Action<T>> expression, T arg)
     {
-        (expression ?? throw new ArgumentNullException(nameof(expression), "Expression cannot be null"))
-            .Compile()(arg);
+        ArgumentNullException.ThrowIfNull(expression);
+        expression.Compile()(arg);
     }
 
     /// <summary>
@@ -187,10 +183,7 @@ public static class ExpressionExtensions
     /// <exception cref="ArgumentNullException"><paramref name="expression"/> is null.</exception>
     public static Expression<Func<T, bool>> Not<T>(this Expression<Func<T, bool>> expression)
     {
-        if (expression == null)
-        {
-            throw new ArgumentNullException(nameof(expression));
-        }
+        ArgumentNullException.ThrowIfNull(expression);
 
         var negated = Expression.Not(expression.Body);
         return Expression.Lambda<Func<T, bool>>(negated, expression.Parameters);
@@ -210,15 +203,8 @@ public static class ExpressionExtensions
         this Expression<Func<TIn, TInter>> first,
         Expression<Func<TInter, TOut>> second)
     {
-        if (first == null)
-        {
-            throw new ArgumentNullException(nameof(first));
-        }
-
-        if (second == null)
-        {
-            throw new ArgumentNullException(nameof(second));
-        }
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
 
         //Map the parameters of the second expression to the body of the first
         var replacements = second.Parameters
@@ -242,20 +228,9 @@ public static class ExpressionExtensions
     public static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second,
         Func<Expression, Expression, Expression> merge)
     {
-        if (first == null)
-        {
-            throw new ArgumentNullException(nameof(first));
-        }
-
-        if (second == null)
-        {
-            throw new ArgumentNullException(nameof(second));
-        }
-
-        if (merge == null)
-        {
-            throw new ArgumentNullException(nameof(merge));
-        }
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        ArgumentNullException.ThrowIfNull(merge);
 
         // zip parameters (map from parameters of second to parameters of first)
         var map = first.Parameters
