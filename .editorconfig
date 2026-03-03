@@ -57,6 +57,9 @@ dotnet_diagnostic.ACL1013.severity = warning
 # [Naming] ACL1014: Don't include numbers in identifiers
 dotnet_diagnostic.ACL1014.severity = warning
 
+# ACL1017: Avoid Boolean Parameters
+dotnet_diagnostic.ACL1017.severity = none
+
 # A class or interface should have a single purpose
 dotnet_diagnostic.AV1000.severity = warning
 
@@ -902,6 +905,9 @@ dotnet_diagnostic.DOC207.severity = warning
 
 # The documentation contains a `<see href="..."/>` element with an unrecognized URI.
 dotnet_diagnostic.DOC209.severity = warning
+
+# Use block body for method.
+dotnet_diagnostic.IDE0022.severity = none
 
 # Use simple using statement
 dotnet_diagnostic.IDE0063.severity = warning

@@ -96,6 +96,22 @@ dotnet_diagnostic.SA1650.severity = warning
 
 # The documentation for the element contains one or more `<placeholder>` elements.
 dotnet_diagnostic.SA1651.severity = warning
+
+# ACL1017: Avoid Boolean Parameters
+dotnet_diagnostic.ACL1017.severity = none
+
+# IDE0010: Add missing cases
+dotnet_diagnostic.IDE0010.severity = silent
+
+# Use block body for methods.
+dotnet_diagnostic.IDE0022.severity = none
+
+# IDE0130: Namespace does not match folder structure
+dotnet_diagnostic.IDE0130.severity = none
+
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = none
+
 csharp_indent_labels = one_less_than_current
 csharp_using_directive_placement = outside_namespace:silent
 csharp_prefer_simple_using_statement = true:suggestion
@@ -112,6 +128,7 @@ csharp_style_expression_bodied_accessors = true:silent
 csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
 csharp_style_throw_expression = true:suggestion
+
 [*.{cs,vb}]
 #### Naming styles ####
 

@@ -4,83 +4,82 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace Audacia.Core.Extensions
+namespace Audacia.Core.Extensions;
+
+/// <summary>
+/// Extension methods for the type <see cref="DataTable"/>.
+/// </summary>
+public static class DataTableExtensions
 {
     /// <summary>
-    /// Extension methods for the type <see cref="DataTable"/>.
+    /// Converts a DataTable to a CSV string.
     /// </summary>
-    public static class DataTableExtensions
+    /// <param name="dataTable">The DataTable to convert.</param>
+    /// <param name="delimiter">The delimiter to use in the converted string (defaults to ',').</param>
+    /// <returns>The converted string.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="dataTable"/> is null.</exception>
+    /// <exception cref="NotSupportedException">Delimiter is invalid.</exception>
+    public static string ToCsv(this DataTable dataTable, string delimiter = ",")
     {
-        /// <summary>
-        /// Converts a DataTable to a CSV string.
-        /// </summary>
-        /// <param name="dataTable">The DataTable to convert.</param>
-        /// <param name="delimiter">The delimiter to use in the converted string (defaults to ',').</param>
-        /// <returns>The converted string.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="dataTable"/> is null.</exception>
-        /// <exception cref="NotSupportedException">Delimiter is invalid.</exception>
-        public static string ToCsv(this DataTable dataTable, string delimiter = ",")
+        ValidateArguments(dataTable, delimiter);
+
+        var outputBuilder = new StringBuilder();
+
+        var headers = GetHeaders(dataTable);
+
+        _ = outputBuilder.AppendJoin(delimiter, headers).AppendLine();
+
+        return GetRows(dataTable, delimiter, outputBuilder);
+    }
+
+    private static void ValidateArguments(DataTable dataTable, string delimiter)
+    {
+        if (dataTable == null)
         {
-            ValidateArguments(dataTable, delimiter);
-
-            var outputBuilder = new StringBuilder();
-
-            var headers = GetHeaders(dataTable);
-
-            outputBuilder.AppendJoin(delimiter, headers).AppendLine();
-
-            return GetRows(dataTable, delimiter, outputBuilder);
+            throw new ArgumentNullException(nameof(dataTable));
         }
 
-        private static void ValidateArguments(DataTable dataTable, string delimiter)
+        if (delimiter == "\"")
         {
-            if (dataTable == null)
-            {
-                throw new ArgumentNullException(nameof(dataTable));
-            }
+            throw new NotSupportedException("Cannot use \" as a delimiter as it is used in CSV qualification");
+        }
+    }
 
-            if (delimiter == "\"")
-            {
-                throw new NotSupportedException("Cannot use \" as a delimiter as it is used in CSV qualification");
-            }
+    private static HashSet<string> GetHeaders(DataTable dataTable)
+    {
+        var headers = new HashSet<string>();
+        foreach (DataColumn column in dataTable.Columns)
+        {
+            var header = column.Caption ?? column.ColumnName;
+
+            header = header.Replace("\"", "\"\"", StringComparison.InvariantCulture);
+
+            _ = headers.Add($"\"{header}\"");
         }
 
-        private static HashSet<string> GetHeaders(DataTable dataTable)
+        return headers;
+    }
+
+    private static string GetRows(DataTable dataTable, string delimiter, StringBuilder outputBuilder)
+    {
+        foreach (DataRow row in dataTable.Rows)
         {
-            var headers = new HashSet<string>();
-            foreach (DataColumn column in dataTable.Columns)
+            var cells = new string[row.ItemArray.Length];
+
+            for (var i = 0; i < row.ItemArray.Length; i++)
             {
-                var header = column.Caption ?? column.ColumnName;
+                var cellValue = row.ItemArray.ElementAt(i);
 
-                header = header.Replace("\"", "\"\"", StringComparison.InvariantCulture);
+                // If we have a format string, we can apply it here using string.Format();
+                var cellValueString = cellValue?.ToString();
+                cellValueString = cellValueString?.Replace("\"", "\"\"", StringComparison.InvariantCulture);
 
-                headers.Add($"\"{header}\"");
+                cells[i] = $"\"{cellValueString}\"";
             }
 
-            return headers;
+            _ = outputBuilder.AppendJoin(delimiter, cells).AppendLine();
         }
 
-        private static string GetRows(DataTable dataTable, string delimiter, StringBuilder outputBuilder)
-        {
-            foreach (DataRow row in dataTable.Rows)
-            {
-                var cells = new string[row.ItemArray.Length];
-
-                for (var i = 0; i < row.ItemArray.Length; i++)
-                {
-                    var cellValue = row.ItemArray.ElementAt(i);
-
-                    // If we have a format string, we can apply it here using string.Format();
-                    var cellValueString = cellValue?.ToString();
-                    cellValueString = cellValueString?.Replace("\"", "\"\"", StringComparison.InvariantCulture);
-
-                    cells[i] = $"\"{cellValueString}\"";
-                }
-
-                outputBuilder.AppendJoin(delimiter, cells).AppendLine();
-            }
-
-            return outputBuilder.ToString().TrimEnd(Environment.NewLine.ToCharArray());
-        }
+        return outputBuilder.ToString().TrimEnd(Environment.NewLine.ToCharArray());
     }
 }
