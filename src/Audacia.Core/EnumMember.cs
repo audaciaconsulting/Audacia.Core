@@ -137,7 +137,7 @@ public static class EnumMember
     /// <returns>The description string.</returns>
     /// <returns>The value of <see cref="DescriptionAttribute"/> from the provided <paramref name="enumValue"/>.</returns>
     /// <exception cref="ArgumentNullException">enumType or value is null.</exception>
-    public static string? GetDescription(object enumValue)
+    private static string? GetDescription(object enumValue)
     {
         if (enumValue == null)
         {
