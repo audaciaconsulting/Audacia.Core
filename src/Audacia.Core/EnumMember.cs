@@ -33,7 +33,7 @@ public static class EnumMember
     /// <returns>A list of descriptions from the provided enum type.</returns>
     public static IEnumerable<string?> Descriptions(Type enumType)
     {
-        enumType = ValidateEnumType(enumType);
+        enumType = ResolveEnumType(enumType);
 
         foreach (var value in Enum.GetValues(enumType))
         {
@@ -60,7 +60,7 @@ public static class EnumMember
     /// <returns>A list of values from the provided enum type.</returns>
     public static IEnumerable<string?> EnumMemberValues(Type enumType)
     {
-        enumType = ValidateEnumType(enumType);
+        enumType = ResolveEnumType(enumType);
 
         foreach (var value in Enum.GetValues(enumType))
         {
@@ -86,7 +86,7 @@ public static class EnumMember
     /// <returns>A list of names from the provided enum type.</returns>
     public static IEnumerable<string?> Names(Type enumType)
     {
-        enumType = ValidateEnumType(enumType);
+        enumType = ResolveEnumType(enumType);
 
         foreach (var value in Enum.GetValues(enumType))
         {
@@ -111,7 +111,7 @@ public static class EnumMember
     /// <returns>A list of human readble names from the provided enum type.</returns>
     public static IEnumerable<string?> Options(Type enumType)
     {
-        enumType = ValidateEnumType(enumType);
+        enumType = ResolveEnumType(enumType);
 
         foreach (var value in Enum.GetValues(enumType))
         {
@@ -146,7 +146,7 @@ public static class EnumMember
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
-        ValidateEnumType(enumType);
+        ThrowIfNotEnumType(enumType);
 
         return GetFieldInfo(enumValue)
             ?.GetCustomAttribute<DescriptionAttribute>(false)
@@ -169,7 +169,7 @@ public static class EnumMember
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
-        ValidateEnumType(enumType);
+        ThrowIfNotEnumType(enumType);
 
         return GetFieldInfo(enumValue)
             ?.GetCustomAttribute<EnumMemberAttribute>(false)
@@ -191,7 +191,7 @@ public static class EnumMember
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
-        ValidateEnumType(enumType);
+        ThrowIfNotEnumType(enumType);
 
         return GetFieldInfo(enumValue)?.Name;
     }
@@ -224,7 +224,7 @@ public static class EnumMember
 
         var enumType = enumValue.GetType().GetUnderlyingTypeIfNullable();
 
-        ValidateEnumType(enumType);
+        ThrowIfNotEnumType(enumType);
 
         return Convert.ToInt32(enumValue, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture);
     }
@@ -263,7 +263,7 @@ public static class EnumMember
     /// <returns>The enum value as an object.</returns>
     public static object? Parse(Type enumType, string value)
     {
-        enumType = ValidateEnumType(enumType);
+        enumType = ResolveEnumType(enumType);
 
         value = SanitizeDisplayNameString(value) ?? string.Empty;
         ValidateValueString(value);
@@ -375,7 +375,7 @@ public static class EnumMember
     /// <returns>An integer array of enum values.</returns>
     public static IEnumerable<int> Values(Type enumType)
     {
-        enumType = ValidateEnumType(enumType);
+        enumType = ResolveEnumType(enumType);
 
         return (int[])Enum.GetValues(enumType);
     }
@@ -389,7 +389,7 @@ public static class EnumMember
     public static IEnumerable<TEnum> Values<TEnum>() where TEnum : struct
     {
         var enumType = typeof(TEnum);
-        ValidateEnumType(enumType);
+        ThrowIfNotEnumType(enumType);
 
         return (TEnum[])Enum.GetValues(typeof(TEnum));
     }
@@ -431,12 +431,9 @@ public static class EnumMember
         return value?.Replace("–", "-", StringComparison.InvariantCulture).Trim();
     }
 
-    private static Type ValidateEnumType(Type enumType)
+    private static Type ResolveEnumType(Type enumType)
     {
-        if (enumType == null)
-        {
-            throw new ArgumentNullException(nameof(enumType));
-        }
+        ArgumentNullException.ThrowIfNull(enumType);
 
         if (enumType.IsNullable())
         {
@@ -444,6 +441,20 @@ public static class EnumMember
         }
 
         return !enumType.IsEnum ? throw new ArgumentException("Type must be an enum type.", nameof(enumType)) : enumType;
+    }
+
+    private static void ThrowIfNotEnumType(Type enumType)
+    {
+        ArgumentNullException.ThrowIfNull(enumType);
+
+        var underlying = enumType.IsNullable()
+            ? enumType.GetUnderlyingTypeIfNullable()
+            : enumType;
+
+        if (!underlying.IsEnum)
+        {
+            throw new ArgumentException("Type must be an enum type.", nameof(enumType));
+        }
     }
 
     private static void ValidateValueString(string? value)
