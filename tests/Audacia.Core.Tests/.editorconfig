@@ -1,21 +1,31 @@
+# NOTE: Requires **VS2019 16.3** or later
 
-# All files
-[*]
-indent_style = space
+# Unit Test Rules
+# Description: Ruleset with rule overrides for test projects
 
-# Xml files
+# Code files
+[*.cs]
 
-# AV1715: Name of public or internal boolean identifier should start with a verb
-dotnet_diagnostic.AV1715.severity = none
+# Methods should not exceed a predefined number of statements.
+dotnet_diagnostic.ACL1002.max_statement_count = 20 # Increase max count for tests, as they may contain complex setup
 
-# ACL1017: Parameter in public or internal member is of type bool or bool?
-dotnet_diagnostic.ACL1017.severity = none
+# A property, method or local function should do only one thing *** Suppress as test methods may contain 'And' to make them more descriptive ***
+dotnet_diagnostic.AV1115.severity = none
 
-# IDE0320: Make anonymous function static
-dotnet_diagnostic.IDE0320.severity = none
+# Don't repeat the name of a class or enumeration in its members *** Suppressed as test methods often contain the parent type in their name ***
+dotnet_diagnostic.AV1710.severity = none
 
-# ACL1004: Identifier contains an abbreviation or is too short
-dotnet_diagnostic.ACL1004.severity = none
+# [NAMING] Nested types should not be visible
+dotnet_diagnostic.CA1034.severity = none
 
-[*.xml]
-indent_size = 2
+# [DESIGN] Validate arguments of public methods
+dotnet_diagnostic.CA1062.severity = none
+
+# [MAINTAINABILITY] Avoid excessive class coupling *** Suppressed as integration tests will generally have high coupling; even smaller unit test classes will have high coupling if the class under test also does, in which case the warning should be raised against the class itself ***
+dotnet_diagnostic.CA1506.severity = none
+
+# [DESIGN] Identifiers should not contain underscores
+dotnet_diagnostic.CA1707.severity = none
+
+# [NAMING] Asynchronous method name should end with 'Async' ** Suppress as we don't want to suffix test methods ***
+dotnet_diagnostic.RCS1046.severity = none

@@ -38,9 +38,8 @@ public class PagingSpecification<T>(IQueryable<T> query)
     /// <exception cref="ArgumentNullException"><paramref name="pagingRequest"/> is null.</exception>
     public PagingSpecification<T> ConfigurePaging(PagingRequest pagingRequest)
     {
-        return pagingRequest == null
-            ? throw new ArgumentNullException(nameof(pagingRequest))
-            : ConfigurePaging(pagingRequest.PageSize, pagingRequest.PageNumber);
+        ArgumentNullException.ThrowIfNull(pagingRequest);
+        return ConfigurePaging(pagingRequest.PageSize, pagingRequest.PageNumber);
     }
 
     /// <summary>
@@ -64,9 +63,8 @@ public class PagingSpecification<T>(IQueryable<T> query)
     /// <exception cref="ArgumentNullException"><paramref name="pagingRequest"/> is null.</exception>
     public PagingSpecification<T> ConfigureSorting(SortablePagingRequest pagingRequest)
     {
-        return pagingRequest == null
-            ? throw new ArgumentNullException(nameof(pagingRequest))
-            : ConfigureSorting(pagingRequest.SortProperty, pagingRequest.Descending);
+        ArgumentNullException.ThrowIfNull(pagingRequest);
+        return ConfigureSorting(pagingRequest.SortProperty, pagingRequest.Descending);
     }
 
     /// <summary>

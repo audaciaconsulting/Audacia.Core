@@ -28,13 +28,4 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Audacia.Core\Audacia.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <EditorConfigFiles Remove="C:\Users\TomCooper\source\repos\Audacia\Audacia.Core\tests\Audacia.Core.Tests\.editorconfig" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="C:\Users\TomCooper\source\repos\Audacia\Audacia.Core\tests\Audacia.Core.Tests\.editorconfig" />
-  </ItemGroup>
 </Project>
