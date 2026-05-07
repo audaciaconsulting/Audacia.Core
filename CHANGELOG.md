@@ -1,8 +1,8 @@
 # Changelog
 
-## 2.2.0 - 2026-03-03
+## 3.0.0 - 2026-03-03
 ### Added
-- Minor suppressions for new Audacia.CodeAnalysis analysers.
+- README.md file to Nuget Package.
 
 ### Changed
 - Upgraded target framework to .NET10
