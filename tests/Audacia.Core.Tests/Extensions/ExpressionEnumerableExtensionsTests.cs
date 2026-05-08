@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Audacia.Core.Extensions;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace Audacia.Core.Tests.Extensions;
@@ -27,7 +27,7 @@ public class ExpressionEnumerableExtensionsTests
         var sut = expressions.All();
         var result = sut.Compile().Invoke(target);
 
-        result.Should().Be(expectedResult);
+        result.ShouldBe(expectedResult);
     }
 
     [Theory]
@@ -49,7 +49,7 @@ public class ExpressionEnumerableExtensionsTests
         var sut = expressions.Any();
         var result = sut.Compile().Invoke(target);
 
-        result.Should().Be(expectedResult);
+        result.ShouldBe(expectedResult);
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public class ExpressionEnumerableExtensionsTests
         var sut = expressions.All();
         var result = sut.Compile().Invoke(target);
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public class ExpressionEnumerableExtensionsTests
         var sut = expressions.Any();
         var result = sut.Compile().Invoke(target);
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     private class ExamplePoco

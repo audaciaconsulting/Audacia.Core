@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Shouldly;
 using Xunit;
-using FluentAssertions;
 
 namespace Audacia.Core.Tests.Paging;
 
@@ -27,7 +27,7 @@ public class PageTests
 
         var page = new Page<ExampleDto>(query, pagingRequest);
 
-        page.TotalRecords.Should().Be(dataCount);
+        page.TotalRecords.ShouldBe(dataCount);
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class PageTests
 
         var page = new Page<ExampleDto>(query, pagingRequest);
 
-        page.TotalPages.Should().Be(2);
+        page.TotalPages.ShouldBe(2);
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class PageTests
 
         var page = new Page<ExampleDto>(query, pagingRequest);
 
-        page.Data.Should().NotContain(expectedExcludedRow);
+        page.Data.ShouldNotContain(expectedExcludedRow);
     }
 
     [Fact]
@@ -76,7 +76,7 @@ public class PageTests
 
         var page = new Page<ExampleDto>(query, pagingRequest);
 
-        page.Data.Should().HaveCount(dataCount);
+        page.Data.Count().ShouldBe(dataCount);
     }
 
     [Fact]
@@ -100,7 +100,7 @@ public class PageTests
 
         var page = new Page<ExampleDto>(query, pagingRequest);
 
-        page.Data.Should().NotContain(expectedExcludedRow);
+        page.Data.ShouldNotContain(expectedExcludedRow);
     }
 
     [Fact]
@@ -118,6 +118,6 @@ public class PageTests
 
         Func<Page<ExampleDto>> act = () => new Page<ExampleDto>(query, pagingRequest);
 
-        act.Should().ThrowExactly<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Audacia.Core.Extensions;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace Audacia.Core.Tests.Extensions;
@@ -28,7 +28,7 @@ public class ExpressionExtensionsTests
 
         var result = convertedExpression.Compile().Invoke(dogOwner);
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [Theory]
@@ -51,7 +51,7 @@ public class ExpressionExtensionsTests
 
         var result = convertedExpression.Compile().Invoke(dogOwner);
 
-        result.Should().Be(expectedValue);
+        result.ShouldBe(expectedValue);
     }
 
     private interface IHavePet<TPet> where TPet : IPet

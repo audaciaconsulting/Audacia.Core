@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -73,10 +72,6 @@ public class PagingSpecification<T>(IQueryable<T> query)
     /// <param name="sortProperty">The property of <typeparamref name="T"/> we want to sort.</param>
     /// <param name="descending">The sort direction.</param>
     /// <returns>A paging specifications with the <paramref name="sortProperty"/> and <paramref name="descending"/>.</returns>
-    [SuppressMessage(
-        "Maintainability",
-        "AV1564:Parameter in public or internal member is of type bool or bool?",
-        Justification = "Makes sense when passed from UI.")]
     public virtual PagingSpecification<T> ConfigureSorting(string sortProperty, bool descending)
     {
         _sortProperty = sortProperty;
